@@ -1,0 +1,428 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  MEMBER
+  READER
+  MENTOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  DISABLED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNSPECIFIED
+}
+
+enum ReadingTheme {
+  CAREER
+  WEALTH
+  LOVE
+  HEALTH
+}
+
+enum ReadingType {
+  QUICK
+  STANDARD
+  DEEP
+  DAILY
+}
+
+enum ReadingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum CardCategory {
+  ARCHETYPE
+  ENERGY
+  EVENT
+}
+
+enum CardValueMode {
+  FIXED
+  DUAL
+}
+
+enum RecordStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ReportType {
+  LIGHT
+  SINGLE_THEME
+  FULL
+  MEMBER_DAILY
+  MEMBER_WEEKLY
+  MEMBER_MONTHLY
+}
+
+enum MembershipStatus {
+  ACTIVE
+  TRIAL
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELED
+  REFUNDED
+}
+
+enum CourseLevel {
+  FOUNDATION
+  ADVANCED
+  PRACTICE
+  CERTIFICATION
+  BUSINESS
+  MENTOR
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELED
+  EXPIRED
+}
+
+enum CertificationLevel {
+  READER_LEVEL_1
+  READER_LEVEL_2
+  MENTOR_LEVEL
+}
+
+enum CertificationStatus {
+  ACTIVE
+  PENDING
+  EXPIRED
+  SUSPENDED
+  REVOKED
+}
+
+model User {
+  id             String                @id @default(cuid())
+  email          String                @unique
+  passwordHash   String                @map("password_hash")
+  displayName    String?               @map("display_name")
+  role           UserRole              @default(USER)
+  status         UserStatus            @default(PENDING)
+  createdAt      DateTime              @default(now()) @map("created_at")
+  updatedAt      DateTime              @updatedAt @map("updated_at")
+  birthProfiles  BirthProfile[]
+  sessions       UserSession[]
+  readings       DestinyReading[]
+  memberships    Membership[]
+  payments       Payment[]
+  enrollments    Enrollment[]
+  certifications Certification[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  tokenHash String   @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_sessions")
+}
+
+model BirthProfile {
+  id            String           @id @default(cuid())
+  userId        String           @map("user_id")
+  birthDate     DateTime         @map("birth_date") @db.Date
+  birthTime     String           @map("birth_time")
+  birthLocation String           @map("birth_location")
+  timezone      String
+  gender        Gender           @default(UNSPECIFIED)
+  source        String?
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ziweiCharts   ZiweiChart[]
+  readings      DestinyReading[]
+
+  @@index([userId])
+  @@map("birth_profiles")
+}
+
+model ZiweiChart {
+  id             String       @id @default(cuid())
+  birthProfileId String       @map("birth_profile_id")
+  engineVersion  String       @map("engine_version")
+  school         String
+  chartJson      Json         @map("chart_json")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  birthProfile   BirthProfile @relation(fields: [birthProfileId], references: [id], onDelete: Cascade)
+
+  @@index([birthProfileId])
+  @@map("ziwei_charts")
+}
+
+model DestinyReading {
+  id                  String               @id @default(cuid())
+  userId              String               @map("user_id")
+  birthProfileId      String?              @map("birth_profile_id")
+  question            String
+  theme               ReadingTheme
+  readingType         ReadingType          @map("reading_type")
+  status              ReadingStatus        @default(PENDING)
+  createdAt           DateTime             @default(now()) @map("created_at")
+  completedAt         DateTime?            @map("completed_at")
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  birthProfile        BirthProfile?        @relation(fields: [birthProfileId], references: [id], onDelete: SetNull)
+  fiveDimensionInput  FiveDimensionInput?
+  fiveDimensionScore  FiveDimensionScore?
+  cardDraw            CardDraw?
+  questionnaireResult QuestionnaireResult?
+  reports             DestinyReport[]
+  payments            Payment[]
+
+  @@index([userId])
+  @@index([birthProfileId])
+  @@map("destiny_readings")
+}
+
+model FiveDimensionInput {
+  id             String         @id @default(cuid())
+  readingId      String         @unique @map("reading_id")
+  structureValue Float          @map("structure_value")
+  timingValue    Float          @map("timing_value")
+  energyValue    Float          @map("energy_value")
+  mindValue      Float          @map("mind_value")
+  actionValue    Float          @map("action_value")
+  inputJson      Json           @map("input_json")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  reading        DestinyReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+
+  @@map("five_dimension_inputs")
+}
+
+model FiveDimensionScore {
+  id             String         @id @default(cuid())
+  readingId      String         @unique @map("reading_id")
+  careerScore    Int            @map("career_score")
+  wealthScore    Int            @map("wealth_score")
+  loveScore      Int            @map("love_score")
+  healthScore    Int            @map("health_score")
+  dominantFactor String         @map("dominant_factor")
+  riskFlagsJson  Json           @map("risk_flags_json")
+  breakdownJson  Json           @map("breakdown_json")
+  engineVersion  String         @map("engine_version")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  reading        DestinyReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+
+  @@map("five_dimension_scores")
+}
+
+model DestinyCard {
+  id                 String        @id @default(cuid())
+  cardKey            String        @unique @map("card_key")
+  name               String
+  category           CardCategory
+  valueMode          CardValueMode @map("value_mode")
+  baseValue          Float?        @map("base_value")
+  positiveValue      Float?        @map("positive_value")
+  negativeValue      Float?        @map("negative_value")
+  keywordsJson       Json          @map("keywords_json")
+  positiveMeaning    String?       @map("positive_meaning")
+  shadowMeaning      String?       @map("shadow_meaning")
+  interpretationHint String?       @map("interpretation_hint")
+  themeBiasJson      Json?         @map("theme_bias_json")
+  promptText         String?       @map("prompt_text")
+  status             RecordStatus  @default(ACTIVE)
+  archetypeDraws     CardDraw[]    @relation("ArchetypeCard")
+  energyOneDraws     CardDraw[]    @relation("EnergyCardOne")
+  energyTwoDraws     CardDraw[]    @relation("EnergyCardTwo")
+  eventDraws         CardDraw[]    @relation("EventCard")
+
+  @@map("destiny_cards")
+}
+
+model CardDraw {
+  id                String         @id @default(cuid())
+  readingId         String         @unique @map("reading_id")
+  archetypeCardId   String         @map("archetype_card_id")
+  energyCard1Id     String         @map("energy_card_1_id")
+  energyCard2Id     String         @map("energy_card_2_id")
+  eventCardId       String         @map("event_card_id")
+  rawEnergyScore    Float          @map("raw_energy_score")
+  mappedEnergyScore Float          @map("mapped_energy_score")
+  drawJson          Json           @map("draw_json")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  reading           DestinyReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+  archetypeCard     DestinyCard    @relation("ArchetypeCard", fields: [archetypeCardId], references: [id])
+  energyCard1       DestinyCard    @relation("EnergyCardOne", fields: [energyCard1Id], references: [id])
+  energyCard2       DestinyCard    @relation("EnergyCardTwo", fields: [energyCard2Id], references: [id])
+  eventCard         DestinyCard    @relation("EventCard", fields: [eventCardId], references: [id])
+
+  @@index([archetypeCardId])
+  @@index([energyCard1Id])
+  @@index([energyCard2Id])
+  @@index([eventCardId])
+  @@map("card_draws")
+}
+
+model QuestionnaireResult {
+  id                String         @id @default(cuid())
+  readingId         String         @unique @map("reading_id")
+  mindAnswersJson   Json           @map("mind_answers_json")
+  mindAverage       Float          @map("mind_average")
+  mindLevel         Int            @map("mind_level")
+  mindFactor        Float          @map("mind_factor")
+  actionAnswersJson Json           @map("action_answers_json")
+  actionTotal       Int            @map("action_total")
+  actionRaw         Int            @map("action_raw")
+  actionLabel       String         @map("action_label")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  reading           DestinyReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+
+  @@map("questionnaire_results")
+}
+
+model DestinyReport {
+  id            String         @id @default(cuid())
+  readingId     String         @map("reading_id")
+  reportType    ReportType     @map("report_type")
+  reportVersion String         @map("report_version")
+  reportJson    Json           @map("report_json")
+  reportText    String         @map("report_text")
+  pdfUrl        String?        @map("pdf_url")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  reading       DestinyReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+
+  @@index([readingId])
+  @@map("destiny_reports")
+}
+
+model Membership {
+  id         String           @id @default(cuid())
+  userId     String           @map("user_id")
+  planKey    String           @map("plan_key")
+  status     MembershipStatus @default(TRIAL)
+  startedAt  DateTime         @map("started_at")
+  expiresAt  DateTime?        @map("expires_at")
+  provider   String?
+  providerRef String?         @map("provider_ref")
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments   Payment[]
+
+  @@index([userId])
+  @@map("memberships")
+}
+
+model Payment {
+  id           String         @id @default(cuid())
+  userId       String         @map("user_id")
+  readingId    String?        @map("reading_id")
+  membershipId String?        @map("membership_id")
+  amount       Decimal        @db.Decimal(10, 2)
+  currency     String         @default("USD")
+  status       PaymentStatus  @default(PENDING)
+  provider     String?
+  providerRef  String?        @map("provider_ref")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reading      DestinyReading? @relation(fields: [readingId], references: [id], onDelete: SetNull)
+  membership   Membership?    @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([readingId])
+  @@index([membershipId])
+  @@map("payments")
+}
+
+model Course {
+  id          String           @id @default(cuid())
+  courseKey   String           @unique @map("course_key")
+  title       String
+  level       CourseLevel
+  status      RecordStatus     @default(DRAFT)
+  price       Decimal?         @db.Decimal(10, 2)
+  currency    String?          @default("USD")
+  metaJson    Json?            @map("meta_json")
+  enrollments Enrollment[]
+
+  @@map("courses")
+}
+
+model Enrollment {
+  id          String           @id @default(cuid())
+  userId      String           @map("user_id")
+  courseId    String           @map("course_id")
+  status      EnrollmentStatus @default(ACTIVE)
+  enrolledAt  DateTime         @default(now()) @map("enrolled_at")
+  completedAt DateTime?        @map("completed_at")
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+model Certification {
+  id          String              @id @default(cuid())
+  userId      String              @map("user_id")
+  level       CertificationLevel
+  status      CertificationStatus @default(PENDING)
+  certNumber  String              @unique @map("cert_number")
+  issuedAt    DateTime?           @map("issued_at")
+  expiresAt   DateTime?           @map("expires_at")
+  reviewNotes String?             @map("review_notes")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("certifications")
+}
+
+model EngineVersion {
+  id         String   @id @default(cuid())
+  engineName String   @map("engine_name")
+  version    String
+  notes      String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([engineName, version])
+  @@map("engine_versions")
+}
+
+model RuleSet {
+  id         String   @id @default(cuid())
+  ruleType   String   @map("rule_type")
+  version    String
+  school     String?
+  configJson Json     @map("config_json")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([ruleType, version, school])
+  @@map("rule_sets")
+}
