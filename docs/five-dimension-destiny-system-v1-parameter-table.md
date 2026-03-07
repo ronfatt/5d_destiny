@@ -74,6 +74,37 @@
 
 `(80 + 69) / 2 = 74.5`
 
+### 3.4 14 主星属性维表
+
+说明：
+
+- 本表不覆盖 3.2 中已经定版的引擎基础分。
+- 本表用于补充主星的原型、优势、阴影、五维倾向和领域偏向。
+- 五维倾向采用 `1-5` 星的相对强度，用于规则判断和 AI 解读，不直接等于最终数值。
+
+| 主星 | 原型 | 优势能力 | 阴影风险 | 五维倾向 | 领域偏向 |
+| --- | --- | --- | --- | --- | --- |
+| 紫微 | 帝王/统御者 | 领导、整合、决策 | 控制欲、权力斗争 | Structure 5 / Timing 3 / Energy 2 / Mind 4 / Action 3 | 事业、权力、社会影响 |
+| 天机 | 智者/策略家 | 分析、规划、创意 | 犹豫、想太多 | Structure 3 / Timing 4 / Energy 3 / Mind 5 / Action 2 | 事业、思考、创新 |
+| 太阳 | 光明领袖 | 影响力、社交、名气 | 自我膨胀 | Structure 4 / Timing 3 / Energy 4 / Mind 3 / Action 4 | 事业、名声、公众影响 |
+| 武曲 | 执行者/战士 | 执行、商业、决断 | 冷酷、固执 | Structure 4 / Timing 3 / Energy 3 / Mind 3 / Action 5 | 事业、财富 |
+| 天同 | 福星/享乐者 | 人缘、乐观、缓冲 | 懒散、逃避 | Structure 2 / Timing 3 / Energy 4 / Mind 3 / Action 2 | 人际、情绪 |
+| 廉贞 | 权术者 | 权力操作、战略 | 欲望过强 | Structure 3 / Timing 3 / Energy 3 / Mind 4 / Action 3 | 政治、权力 |
+| 天府 | 财富守护者 | 财务管理、稳定性 | 保守 | Structure 5 / Timing 3 / Energy 3 / Mind 3 / Action 3 | 财富、资产 |
+| 太阴 | 月神/内在守护 | 情感、资源管理 | 情绪敏感 | Structure 3 / Timing 3 / Energy 3 / Mind 4 / Action 2 | 家庭、情感 |
+| 贪狼 | 魅力者/欲望驱动 | 社交、创意、娱乐 | 贪欲、享乐 | Structure 3 / Timing 3 / Energy 5 / Mind 3 / Action 3 | 娱乐、社交 |
+| 巨门 | 辩者/批评者 | 分析、语言、辩论 | 争吵、口舌 | Structure 3 / Timing 3 / Energy 3 / Mind 4 / Action 2 | 沟通、法律 |
+| 天相 | 裁决者 | 平衡、管理、协调 | 过度守规 | Structure 4 / Timing 3 / Energy 3 / Mind 4 / Action 3 | 组织、管理 |
+| 天梁 | 守护者/导师 | 贵人、指导、保护 | 过度保护 | Structure 3 / Timing 4 / Energy 3 / Mind 4 / Action 3 | 教育、医疗、长辈 |
+| 七杀 | 战将 | 决断、突破、冲锋 | 冲动、冒进 | Structure 3 / Timing 3 / Energy 4 / Mind 3 / Action 5 | 竞争、决策 |
+| 破军 | 革命者 | 创新、改变、重启 | 破坏、失控 | Structure 3 / Timing 4 / Energy 4 / Mind 3 / Action 4 | 创业、改革 |
+
+### 3.5 属性维表使用规则
+
+- 当主星基础分接近时，可用原型属性帮助判断主题偏向。
+- 当 AI 解释主星作用时，应优先引用本表中的“优势能力”和“阴影风险”。
+- 当双主星组合出现时，可同时参考两颗星的五维倾向，判断其对 Structure/Mind/Action 的协同或冲突。
+
 ## 4. 辅星加减分系统
 
 ### 4.1 规则范围
