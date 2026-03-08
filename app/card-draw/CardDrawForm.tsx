@@ -73,6 +73,11 @@ export function CardDrawForm() {
         <div className={`feedback ${status === "success" ? "success" : "error"}`}>
           <strong>{status === "success" ? "Draw Complete" : "Status"}</strong>
           <p>{message}</p>
+          {result ? (
+            <div className="ctaRow">
+              <a className="button" href={`/readings/${result.readingId}`}>Open Result Page</a>
+            </div>
+          ) : null}
         </div>
       ) : null}
 

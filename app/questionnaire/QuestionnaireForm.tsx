@@ -187,7 +187,12 @@ export function QuestionnaireForm() {
         <div className={`feedback ${submitState.status}`}>
           <strong>{submitState.status === "success" ? "Saved" : "Status"}</strong>
           <p>{submitState.message}</p>
-          {submitState.readingId ? <code>{submitState.readingId}</code> : null}
+          {submitState.readingId ? (<>
+          <code>{submitState.readingId}</code>
+          <div className="ctaRow">
+            <a className="button" href="/card-draw">Go To Card Draw</a>
+          </div>
+        </>) : null}
         </div>
       ) : null}
     </form>
