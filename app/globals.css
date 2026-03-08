@@ -281,3 +281,30 @@ main {
     grid-column: span 12;
   }
 }
+
+.inlineError {
+  color: #ff9a9a;
+  font-size: 14px;
+}
+
+.codeBlock {
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(6, 17, 33, 0.72);
+  color: var(--text);
+  font: 13px/1.6 "SFMono-Regular", Consolas, monospace;
+}
+
+.reportBlock {
+  min-height: 320px;
+}
+
+.imagePreview {
+  width: 100%;
+  display: block;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+}
