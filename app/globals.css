@@ -256,3 +256,28 @@ main {
 .questionItem input[type="range"] {
   padding: 0;
 }
+
+.drawResultGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.compactCard {
+  grid-column: span 3;
+}
+
+.compactCard h3 {
+  margin: 0 0 8px;
+}
+
+.compactCard strong {
+  color: var(--gold);
+  font-size: 24px;
+}
+
+@media (max-width: 900px) {
+  .compactCard {
+    grid-column: span 12;
+  }
+}

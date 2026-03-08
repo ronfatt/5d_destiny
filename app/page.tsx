@@ -53,6 +53,7 @@ export default function HomePage() {
           <div className="ctaRow">
             <a className="button primary" href="/birth-profile">Birth Profile</a>
             <a className="button" href="/questionnaire">Questionnaire</a>
+            <a className="button" href="/card-draw">Card Draw</a>
           </div>
         </article>
 
