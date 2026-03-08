@@ -308,3 +308,69 @@ main {
   border-radius: 18px;
   border: 1px solid var(--line);
 }
+
+.statsGrid {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto 20px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.statCard {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 22px;
+  padding: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.statCard span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.statCard strong {
+  font-size: 32px;
+  color: var(--gold);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.dataTable th,
+.dataTable td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(193, 208, 255, 0.1);
+  vertical-align: top;
+}
+
+.dataTable th {
+  color: var(--gold);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dataTable td {
+  color: var(--muted);
+}
+
+.dataTable td a {
+  color: var(--cyan);
+}
+
+@media (max-width: 900px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -55,6 +55,7 @@ export default function HomePage() {
             <a className="button" href="/questionnaire">Questionnaire</a>
             <a className="button" href="/card-draw">Card Draw</a>
             <a className="button" href="/ai-studio">AI Studio</a>
+            <a className="button" href="/admin">Admin</a>
           </div>
         </article>
 
