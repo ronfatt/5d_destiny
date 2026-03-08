@@ -1,13 +1,8 @@
 import { ReadingStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import {
-  buildRiskFlags,
-  computeThemeScore,
-  getDominantFactor,
-  getThemeConfig,
-  themeConfigs
-} from "@/lib/five-dimension-engine";
+import { buildRiskFlags, computeThemeScore, getDominantFactor } from "@/lib/five-dimension-engine";
+import { generateZiweiChart, getThemeFromReading } from "@/lib/ziwei-engine";
 
 export async function POST(
   _request: NextRequest,
@@ -37,20 +32,74 @@ export async function POST(
       );
     }
 
-    const energy = reading.fiveDimensionInput.energyValue;
-    const mind = reading.fiveDimensionInput.mindValue;
-    const actionRaw = Math.round(reading.fiveDimensionInput.actionValue);
+    if (!reading.birthProfile) {
+      return NextResponse.json({ error: "Reading is missing birth profile data." }, { status: 400 });
+    }
+
+    const birthProfile = reading.birthProfile;
+    const ziweiChart = generateZiweiChart(birthProfile);
+    const themeEntries = Object.values(ziweiChart.themes);
+
+    const inputRecord = reading.fiveDimensionInput;
+    const energy = inputRecord.energyValue;
+    const mind = inputRecord.mindValue;
+    const actionRaw = Math.round(inputRecord.actionValue);
 
     const breakdown = Object.fromEntries(
-      themeConfigs.map((config) => [config.key, computeThemeScore(config, energy, mind, actionRaw)])
+      themeEntries.map((config) => [config.key, computeThemeScore(config, energy, mind, actionRaw)])
     );
 
-    const focusConfig = getThemeConfig(reading.theme);
-    const focusBreakdown = breakdown[focusConfig.key];
+    const focusKey = getThemeFromReading(reading.theme);
+    const focusBreakdown = breakdown[focusKey];
     const riskFlags = buildRiskFlags(energy, mind, actionRaw);
     const dominantFactor = getDominantFactor(focusBreakdown);
 
     const score = await prisma.$transaction(async (tx) => {
+      const latestChart = await tx.ziweiChart.findFirst({
+        where: {
+          birthProfileId: birthProfile.id,
+          engineVersion: ziweiChart.engineVersion,
+          school: ziweiChart.school
+        },
+        orderBy: { createdAt: "desc" }
+      });
+
+      if (latestChart) {
+        await tx.ziweiChart.update({
+          where: { id: latestChart.id },
+          data: { chartJson: ziweiChart }
+        });
+      } else {
+        await tx.ziweiChart.create({
+          data: {
+            birthProfileId: birthProfile.id,
+            engineVersion: ziweiChart.engineVersion,
+            school: ziweiChart.school,
+            chartJson: ziweiChart
+          }
+        });
+      }
+
+      await tx.fiveDimensionInput.update({
+        where: { readingId },
+        data: {
+          structureValue: ziweiChart.themes[focusKey].structure,
+          timingValue: ziweiChart.themes[focusKey].timing,
+          inputJson: {
+            ...(typeof inputRecord.inputJson === "object" && inputRecord.inputJson !== null
+              ? (inputRecord.inputJson as Record<string, unknown>)
+              : {}),
+            ziweiChartSummary: {
+              engineVersion: ziweiChart.engineVersion,
+              school: ziweiChart.school,
+              lifePalace: ziweiChart.lifePalace,
+              bodyPalace: ziweiChart.bodyPalace,
+              focusTheme: focusKey
+            }
+          }
+        }
+      });
+
       const saved = await tx.fiveDimensionScore.upsert({
         where: { readingId },
         update: {
@@ -61,7 +110,7 @@ export async function POST(
           dominantFactor,
           riskFlagsJson: riskFlags,
           breakdownJson: {
-            source: "mvp_placeholder_structure_timing",
+            source: "ziwei_preset_A",
             focusTheme: reading.theme,
             focusTrend: focusBreakdown.trend,
             themes: breakdown
@@ -77,7 +126,7 @@ export async function POST(
           dominantFactor,
           riskFlagsJson: riskFlags,
           breakdownJson: {
-            source: "mvp_placeholder_structure_timing",
+            source: "ziwei_preset_A",
             focusTheme: reading.theme,
             focusTrend: focusBreakdown.trend,
             themes: breakdown

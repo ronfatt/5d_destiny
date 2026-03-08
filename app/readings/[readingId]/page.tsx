@@ -30,6 +30,19 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
   }
 
   const latestReport = reading.reports[0] ?? null;
+  const inputJson = reading.fiveDimensionInput?.inputJson as
+    | {
+        ziweiChartSummary?: {
+          engineVersion?: string;
+          school?: string;
+          lifePalace?: { label?: string };
+          bodyPalace?: { label?: string };
+          focusTheme?: string;
+        };
+      }
+    | undefined;
+
+  const ziweiSummary = inputJson?.ziweiChartSummary;
 
   const breakdown = reading.fiveDimensionScore?.breakdownJson as
     | {
@@ -59,8 +72,8 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
         <div className="eyebrow">Reading Result</div>
         <h1>Reading {reading.id}</h1>
         <p>
-          This page combines the birth profile, questionnaire, card draw, scoring output, and the latest saved AI
-          report. Current structure and timing values are MVP placeholders until the Ziwei engine is wired in.
+          This page combines the birth profile, questionnaire, card draw, scoring output, the latest saved AI
+          report, and a persisted Ziwei chart summary. Structure and timing now come from the preset_A Ziwei engine.
         </p>
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
         {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} /> : null}
@@ -98,6 +111,21 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
             <li>Action raw: {reading.questionnaireResult?.actionRaw ?? "-"}</li>
             <li>Action label: {reading.questionnaireResult?.actionLabel ?? "-"}</li>
           </ul>
+        </article>
+
+        <article className="card" style={{ gridColumn: "span 12" }}>
+          <h2>Ziwei Summary</h2>
+          {ziweiSummary ? (
+            <ul>
+              <li>Engine: {ziweiSummary.engineVersion ?? "-"}</li>
+              <li>School: {ziweiSummary.school ?? "-"}</li>
+              <li>Life palace: {ziweiSummary.lifePalace?.label ?? "-"}</li>
+              <li>Body palace: {ziweiSummary.bodyPalace?.label ?? "-"}</li>
+              <li>Focus theme source: {ziweiSummary.focusTheme ?? "-"}</li>
+            </ul>
+          ) : (
+            <p>No Ziwei chart summary has been saved yet. Compute the score first.</p>
+          )}
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
