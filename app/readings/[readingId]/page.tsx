@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { ReportRunner } from "./ReportRunner";
 import { ScoreRunner } from "./ScoreRunner";
 
 type ReadingPageProps = {
@@ -16,13 +17,19 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
       questionnaireResult: true,
       fiveDimensionInput: true,
       fiveDimensionScore: true,
-      cardDraw: true
+      cardDraw: true,
+      reports: {
+        orderBy: { createdAt: "desc" },
+        take: 1
+      }
     }
   });
 
   if (!reading) {
     notFound();
   }
+
+  const latestReport = reading.reports[0] ?? null;
 
   const breakdown = reading.fiveDimensionScore?.breakdownJson as
     | {
@@ -52,10 +59,11 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
         <div className="eyebrow">Reading Result</div>
         <h1>Reading {reading.id}</h1>
         <p>
-          This page combines the birth profile, questionnaire, card draw, and scoring output into one result
-          view. Current structure and timing values are MVP placeholders until the Ziwei engine is wired in.
+          This page combines the birth profile, questionnaire, card draw, scoring output, and the latest saved AI
+          report. Current structure and timing values are MVP placeholders until the Ziwei engine is wired in.
         </p>
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
+        {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} /> : null}
       </section>
 
       <section className="grid">
@@ -132,6 +140,20 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
             </>
           ) : (
             <p>No score has been computed yet. Run the scoring step first.</p>
+          )}
+        </article>
+
+        <article className="card" style={{ gridColumn: "span 12" }}>
+          <h2>Latest AI Report</h2>
+          {latestReport ? (
+            <>
+              <p>
+                Version: <strong>{latestReport.reportVersion}</strong>
+              </p>
+              <pre className="codeBlock reportBlock">{latestReport.reportText}</pre>
+            </>
+          ) : (
+            <p>No AI report has been saved yet. Generate one after scoring.</p>
           )}
         </article>
       </section>

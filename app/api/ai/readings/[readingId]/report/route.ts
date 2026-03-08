@@ -1,3 +1,4 @@
+import { ReportType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOpenAIClient, hasOpenAIKey } from "@/lib/openai";
@@ -31,6 +32,47 @@ export async function POST(
       );
     }
 
+    const reportPayload = {
+      reading: {
+        id: reading.id,
+        theme: reading.theme,
+        question: reading.question,
+        status: reading.status
+      },
+      birthProfile: {
+        birthLocation: reading.birthProfile?.birthLocation,
+        timezone: reading.birthProfile?.timezone,
+        gender: reading.birthProfile?.gender
+      },
+      questionnaire: {
+        mindAverage: reading.questionnaireResult.mindAverage,
+        mindFactor: reading.questionnaireResult.mindFactor,
+        actionTotal: reading.questionnaireResult.actionTotal,
+        actionRaw: reading.questionnaireResult.actionRaw,
+        actionLabel: reading.questionnaireResult.actionLabel
+      },
+      fiveDimensionInput: reading.fiveDimensionInput,
+      cardDraw: reading.cardDraw.drawJson,
+      score: {
+        career: reading.fiveDimensionScore.careerScore,
+        wealth: reading.fiveDimensionScore.wealthScore,
+        love: reading.fiveDimensionScore.loveScore,
+        health: reading.fiveDimensionScore.healthScore,
+        dominantFactor: reading.fiveDimensionScore.dominantFactor,
+        riskFlags: reading.fiveDimensionScore.riskFlagsJson,
+        breakdown: reading.fiveDimensionScore.breakdownJson
+      },
+      outputFormat: {
+        sections: [
+          "Overall trend",
+          "Five-dimension interpretation",
+          "Card energy meaning",
+          "Risk reminder",
+          "Action advice"
+        ]
+      }
+    };
+
     const client = getOpenAIClient();
     const response = await client.responses.create({
       model: "gpt-4.1-mini",
@@ -50,60 +92,35 @@ export async function POST(
           content: [
             {
               type: "input_text",
-              text: JSON.stringify(
-                {
-                  reading: {
-                    id: reading.id,
-                    theme: reading.theme,
-                    question: reading.question,
-                    status: reading.status
-                  },
-                  birthProfile: {
-                    birthLocation: reading.birthProfile?.birthLocation,
-                    timezone: reading.birthProfile?.timezone,
-                    gender: reading.birthProfile?.gender
-                  },
-                  questionnaire: {
-                    mindAverage: reading.questionnaireResult.mindAverage,
-                    mindFactor: reading.questionnaireResult.mindFactor,
-                    actionTotal: reading.questionnaireResult.actionTotal,
-                    actionRaw: reading.questionnaireResult.actionRaw,
-                    actionLabel: reading.questionnaireResult.actionLabel
-                  },
-                  fiveDimensionInput: reading.fiveDimensionInput,
-                  cardDraw: reading.cardDraw.drawJson,
-                  score: {
-                    career: reading.fiveDimensionScore.careerScore,
-                    wealth: reading.fiveDimensionScore.wealthScore,
-                    love: reading.fiveDimensionScore.loveScore,
-                    health: reading.fiveDimensionScore.healthScore,
-                    dominantFactor: reading.fiveDimensionScore.dominantFactor,
-                    riskFlags: reading.fiveDimensionScore.riskFlagsJson,
-                    breakdown: reading.fiveDimensionScore.breakdownJson
-                  },
-                  outputFormat: {
-                    sections: [
-                      "Overall trend",
-                      "Five-dimension interpretation",
-                      "Card energy meaning",
-                      "Risk reminder",
-                      "Action advice"
-                    ]
-                  }
-                },
-                null,
-                2
-              )
+              text: JSON.stringify(reportPayload, null, 2)
             }
           ]
         }
       ]
     });
 
+    const reportText = response.output_text;
+
+    const savedReport = await prisma.destinyReport.create({
+      data: {
+        readingId,
+        reportType: ReportType.FULL,
+        reportVersion: "ai-report-v1",
+        reportJson: {
+          source: "openai",
+          model: "gpt-4.1-mini",
+          payload: reportPayload,
+          generatedAt: new Date().toISOString()
+        },
+        reportText
+      }
+    });
+
     return NextResponse.json({
       data: {
         readingId,
-        reportText: response.output_text
+        reportId: savedReport.id,
+        reportText
       }
     });
   } catch (error) {
