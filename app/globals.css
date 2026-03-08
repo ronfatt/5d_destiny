@@ -1,0 +1,135 @@
+:root {
+  --bg: #07111f;
+  --bg-soft: #0d1b2e;
+  --panel: rgba(11, 26, 48, 0.82);
+  --line: rgba(193, 208, 255, 0.16);
+  --text: #edf4ff;
+  --muted: #9fb2d7;
+  --gold: #e3c27a;
+  --cyan: #80d7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: radial-gradient(circle at top, #122744 0%, var(--bg) 48%, #040914 100%);
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(128, 215, 255, 0.12), transparent 26%),
+    radial-gradient(circle at 80% 10%, rgba(227, 194, 122, 0.1), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.hero {
+  padding: 88px 0 40px;
+}
+
+.eyebrow {
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 7vw, 88px);
+  line-height: 0.95;
+  margin: 16px 0;
+  max-width: 860px;
+}
+
+.hero p {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.ctaRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+}
+
+.button.primary {
+  background: linear-gradient(135deg, var(--gold), #b7883a);
+  color: #11161d;
+  border-color: transparent;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  padding-bottom: 48px;
+}
+
+.card {
+  grid-column: span 4;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.card p,
+.card li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.card ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.footerNote {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  padding: 20px 0 40px;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .card {
+    grid-column: span 12;
+  }
+}
