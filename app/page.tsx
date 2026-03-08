@@ -2,7 +2,7 @@ const docs = [
   {
     title: "Core Model",
     description: "Math model, parameter tables, Ziwei mapping, and structure rules.",
-    href: "/api/health"
+    href: "/birth-profile"
   },
   {
     title: "Card System",
@@ -29,7 +29,7 @@ export default function HomePage() {
         </p>
         <div className="ctaRow">
           <a className="button primary" href="/api/health">
-            Check API Health
+            Start Birth Intake
           </a>
           <a className="button" href="https://github.com/ronfatt/5d_destiny">
             Open Repository
@@ -50,7 +50,7 @@ export default function HomePage() {
         <article className="card" style={{ gridColumn: "span 12" }}>
           <h2>Next build targets</h2>
           <ul>
-            <li>Wire real database connection and first migration.</li>
+            <li>Capture birth profiles and persist them to Supabase.</li>
             <li>Implement birth profile, card draw, questionnaire, and reading endpoints.</li>
             <li>Build report pages from the existing AI report template spec.</li>
           </ul>

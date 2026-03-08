@@ -133,3 +133,79 @@ main {
     grid-column: span 12;
   }
 }
+
+.heroCompact {
+  padding-bottom: 24px;
+}
+
+.intakeForm {
+  display: grid;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.fieldGrid label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.fieldGrid input,
+.fieldGrid select {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(6, 17, 33, 0.8);
+  color: var(--text);
+  padding: 0 14px;
+  font: inherit;
+}
+
+.fieldGrid input::placeholder {
+  color: #6f86b2;
+}
+
+.feedback {
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.feedback.success {
+  border-color: rgba(103, 212, 153, 0.5);
+}
+
+.feedback.error {
+  border-color: rgba(255, 124, 124, 0.5);
+}
+
+.feedback p {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.feedback code {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--cyan);
+}
+
+.button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+}
