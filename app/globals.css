@@ -209,3 +209,50 @@ main {
     grid-template-columns: 1fr;
   }
 }
+
+.cardSection {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.sectionHeader p,
+.summaryLine {
+  margin: 0;
+  color: var(--muted);
+}
+
+.questionList {
+  display: grid;
+  gap: 12px;
+}
+
+.questionItem {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(193, 208, 255, 0.12);
+  background: rgba(6, 17, 33, 0.45);
+}
+
+.questionItem span {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.questionItem strong {
+  color: var(--gold);
+}
+
+.questionItem input[type="range"] {
+  padding: 0;
+}

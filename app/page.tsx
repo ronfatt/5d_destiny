@@ -48,6 +48,15 @@ export default function HomePage() {
           </article>
         ))}
         <article className="card" style={{ gridColumn: "span 12" }}>
+          <h2>MVP Flows</h2>
+          <p>Two working intake steps are now live in the app shell.</p>
+          <div className="ctaRow">
+            <a className="button primary" href="/birth-profile">Birth Profile</a>
+            <a className="button" href="/questionnaire">Questionnaire</a>
+          </div>
+        </article>
+
+        <article className="card" style={{ gridColumn: "span 12" }}>
           <h2>Next build targets</h2>
           <ul>
             <li>Capture birth profiles and persist them to Supabase.</li>
