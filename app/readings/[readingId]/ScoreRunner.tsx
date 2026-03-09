@@ -7,7 +7,7 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
   const router = useRouter();
   const hasAutoRun = useRef(false);
   const [status, setStatus] = useState<"idle" | "running" | "error">(hasScore ? "idle" : "running");
-  const [message, setMessage] = useState<string | undefined>(hasScore ? undefined : "正在自动计算分数...");
+  const [message, setMessage] = useState<string | undefined>(hasScore ? undefined : "正在自动推演命盘与趋势...");
 
   async function runScore() {
     setStatus("running");
@@ -20,7 +20,7 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "评分失败。");
+        throw new Error(payload.error || "命盘推演失败。");
       }
 
       router.refresh();
@@ -44,10 +44,10 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
   return (
     <div className="ctaRow">
       <button className="button primary" type="button" onClick={runScore} disabled={status === "running"}>
-        {status === "running" ? "计算中..." : hasScore ? "重新评分" : "计算分数"}
+        {status === "running" ? "推演中..." : hasScore ? "重新推演" : "开始推演"}
       </button>
       <a className="button" href="/card-draw">
-        返回抽牌
+        返回抽牌步骤
       </a>
       {message ? <div className={status === "error" ? "inlineError" : "feedback success inlineNotice"}>{message}</div> : null}
     </div>

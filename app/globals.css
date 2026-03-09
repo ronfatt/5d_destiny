@@ -578,3 +578,127 @@ main {
     grid-column: span 12;
   }
 }
+
+
+.readingHero {
+  padding-bottom: 24px;
+}
+
+.heroSummary {
+  font-size: 20px;
+  line-height: 1.7;
+  max-width: 920px;
+}
+
+.basisStrip {
+  display: inline-flex;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(227, 194, 122, 0.22);
+  background: rgba(227, 194, 122, 0.08);
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.readingHeroMeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.focusPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+.reportGrid {
+  padding-bottom: 56px;
+}
+
+.storyCard {
+  background: linear-gradient(180deg, rgba(11, 26, 48, 0.96), rgba(6, 17, 33, 0.94));
+}
+
+.storyCard h2 {
+  margin-bottom: 12px;
+}
+
+.storyCard p {
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.insightGrid {
+  margin-top: 18px;
+}
+
+.stackList {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.stackItem {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(193, 208, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stackItem strong {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.stackItem span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.narrativeList {
+  margin: 0;
+  padding-left: 22px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.narrativeList li + li {
+  margin-top: 10px;
+}
+
+.orderedList {
+  padding-left: 24px;
+}
+
+.techDetails {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.techDetails summary {
+  cursor: pointer;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.techGrid {
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .basisStrip {
+    border-radius: 20px;
+  }
+}

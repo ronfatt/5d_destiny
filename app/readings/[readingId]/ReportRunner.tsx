@@ -8,7 +8,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
   const hasAutoRun = useRef(false);
   const [status, setStatus] = useState<"idle" | "running" | "error">(hasReport ? "idle" : "running");
   const [message, setMessage] = useState<string | undefined>(
-    hasReport ? undefined : "正在自动生成 AI 报告..."
+    hasReport ? undefined : "正在自动生成命理解盘..."
   );
 
   async function runReport() {
@@ -22,7 +22,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "AI 报告生成失败。");
+        throw new Error(payload.error || "命理解盘生成失败。");
       }
 
       router.refresh();
@@ -46,7 +46,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
   return (
     <div className="ctaRow">
       <button className="button" type="button" onClick={runReport} disabled={status === "running"}>
-        {status === "running" ? "报告生成中..." : hasReport ? "重新生成 AI 报告" : "生成 AI 报告"}
+        {status === "running" ? "解盘生成中..." : hasReport ? "重新生成命理解盘" : "生成命理解盘"}
       </button>
       {message ? <div className={status === "error" ? "inlineError" : "feedback success inlineNotice"}>{message}</div> : null}
     </div>
