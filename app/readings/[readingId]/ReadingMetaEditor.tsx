@@ -32,31 +32,31 @@ export function ReadingMetaEditor({
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "Failed to update reading.");
+        throw new Error(payload.error || "读取信息更新失败。");
       }
 
       setStatus("idle");
-      setMessage("Reading details updated.");
+      setMessage("读取信息已更新。");
       router.refresh();
     } catch (saveError) {
       setStatus("error");
-      setMessage(saveError instanceof Error ? saveError.message : "Unexpected error.");
+      setMessage(saveError instanceof Error ? saveError.message : "发生未知错误。");
     }
   }
 
   return (
     <form className="intakeForm" onSubmit={handleSave}>
       <label>
-        <span>Reading title</span>
-        <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Career Pivot - Q2 2026" />
+        <span>读取标题</span>
+        <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="例如：事业转折 - 2026 Q2" />
       </label>
       <label>
-        <span>Reading note</span>
-        <textarea value={note} onChange={(event) => setNote(event.target.value)} rows={4} placeholder="Context, people involved, deadlines, constraints." />
+        <span>读取备注</span>
+        <textarea value={note} onChange={(event) => setNote(event.target.value)} rows={4} placeholder="记录背景、相关人物、时间节点或限制条件。" />
       </label>
       <div className="ctaRow">
         <button className="button" type="submit" disabled={status === "saving"}>
-          {status === "saving" ? "Saving..." : "Save Details"}
+          {status === "saving" ? "保存中..." : "保存信息"}
         </button>
       </div>
       {message ? <div className={status === "error" ? "inlineError" : "feedback success inlineNotice"}>{message}</div> : null}

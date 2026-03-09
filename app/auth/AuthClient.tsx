@@ -8,8 +8,8 @@ type Mode = "login" | "register";
 export function AuthClient() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("register");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, set邮箱] = useState("");
+  const [password, set密码] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -28,19 +28,19 @@ export function AuthClient() {
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "Authentication failed.");
+        throw new Error(payload.error || "认证失败。");
       }
 
       router.push("/history");
       router.refresh();
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Unexpected error.");
+      setError(authError instanceof Error ? authError.message : "发生未知错误。");
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleLogout() {
+  async function handle退出登录() {
     setLoading(true);
     setError(undefined);
 
@@ -48,7 +48,7 @@ export function AuthClient() {
       await fetch("/api/auth/logout", { method: "POST" });
       router.refresh();
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Unexpected error.");
+      setError(authError instanceof Error ? authError.message : "发生未知错误。");
     } finally {
       setLoading(false);
     }
@@ -58,34 +58,34 @@ export function AuthClient() {
     <div className="authShell">
       <div className="ctaRow authTabs">
         <button className={`button ${mode === "register" ? "primary" : ""}`} type="button" onClick={() => setMode("register")}>
-          Register
+          注册
         </button>
         <button className={`button ${mode === "login" ? "primary" : ""}`} type="button" onClick={() => setMode("login")}>
-          Login
+          登录
         </button>
-        <button className="button" type="button" onClick={handleLogout} disabled={loading}>
-          Logout
+        <button className="button" type="button" onClick={handle退出登录} disabled={loading}>
+          退出登录
         </button>
       </div>
 
       <form className="intakeForm" onSubmit={handleSubmit}>
         {mode === "register" ? (
           <label>
-            <span>Display name</span>
-            <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="Ron" />
+            <span>显示名称</span>
+            <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="例如：Ron" />
           </label>
         ) : null}
         <label>
-          <span>Email</span>
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required />
+          <span>邮箱</span>
+          <input type="email" value={email} onChange={(event) => set邮箱(event.target.value)} placeholder="you@example.com" required />
         </label>
         <label>
-          <span>Password</span>
-          <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Minimum 8 characters" required />
+          <span>密码</span>
+          <input type="password" value={password} onChange={(event) => set密码(event.target.value)} placeholder="至少 8 个字符" required />
         </label>
 
         <button className="button primary" type="submit" disabled={loading}>
-          {loading ? "Submitting..." : mode === "register" ? "Create Account" : "Sign In"}
+          {loading ? "提交中..." : mode === "register" ? "创建账户" : "登录"}
         </button>
       </form>
 

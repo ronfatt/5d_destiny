@@ -43,10 +43,10 @@ export function StartReadingWizard() {
   const [birth, setBirth] = useState(initialBirth);
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
-  const [question, setQuestion] = useState("What is the current trend for my career?");
-  const [theme, setTheme] = useState("CAREER");
-  const [mindAnswers, setMindAnswers] = useState<number[]>(mindQuestions.map(() => 4));
-  const [actionAnswers, setActionAnswers] = useState<number[]>(actionQuestions.map(() => 1));
+  const [question, setQuestion] = useState("我最近的事业趋势如何？");
+  const [theme, set主题] = useState("CAREER");
+  const [mindAnswers, set心念Answers] = useState<number[]>(mindQuestions.map(() => 4));
+  const [actionAnswers, set行动Answers] = useState<number[]>(actionQuestions.map(() => 1));
 
   const progress = useMemo(() => (step / 3) * 100, [step]);
 
@@ -64,13 +64,13 @@ export function StartReadingWizard() {
       const payload = (await response.json()) as { error?: string; data?: { id: string } };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to save birth profile.");
+        throw new Error(payload.error || "出生资料保存失败。");
       }
 
       setBirthProfileId(payload.data.id);
       setStep(2);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Unexpected error.");
+      setError(submitError instanceof Error ? submitError.message : "发生未知错误。");
     } finally {
       setBusy(false);
     }
@@ -98,13 +98,13 @@ export function StartReadingWizard() {
       const payload = (await response.json()) as { error?: string; data?: { readingId: string } };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to save questionnaire.");
+        throw new Error(payload.error || "问卷保存失败。");
       }
 
       setReadingId(payload.data.readingId);
       setStep(3);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Unexpected error.");
+      setError(submitError instanceof Error ? submitError.message : "发生未知错误。");
     } finally {
       setBusy(false);
     }
@@ -123,12 +123,12 @@ export function StartReadingWizard() {
       const payload = (await response.json()) as { error?: string; data?: { readingId: string } };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to draw cards.");
+        throw new Error(payload.error || "抽牌失败。");
       }
 
       router.push(`/readings/${payload.data.readingId}`);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Unexpected error.");
+      setError(submitError instanceof Error ? submitError.message : "发生未知错误。");
       setBusy(false);
     }
   }
@@ -139,42 +139,42 @@ export function StartReadingWizard() {
         <div className="wizardProgressBar" style={{ width: `${progress}%` }} />
       </div>
       <div className="wizardSteps">
-        <span className={step >= 1 ? "active" : ""}>1. Birth</span>
-        <span className={step >= 2 ? "active" : ""}>2. Reading Setup</span>
-        <span className={step >= 3 ? "active" : ""}>3. Draw + Result</span>
+        <span className={step >= 1 ? "active" : ""}>1. 出生资料</span>
+        <span className={step >= 2 ? "active" : ""}>2. 读取设置</span>
+        <span className={step >= 3 ? "active" : ""}>3. 抽牌与结果</span>
       </div>
 
       {step === 1 ? (
         <form className="intakeForm" onSubmit={handleBirthSubmit}>
           <div className="fieldGrid">
             <label>
-              <span>Birth date</span>
+              <span>出生日期</span>
               <input type="date" value={birth.birthDate} onChange={(event) => setBirth((current) => ({ ...current, birthDate: event.target.value }))} required />
             </label>
             <label>
-              <span>Birth time</span>
+              <span>出生时间</span>
               <input type="time" value={birth.birthTime} onChange={(event) => setBirth((current) => ({ ...current, birthTime: event.target.value }))} required />
             </label>
             <label>
-              <span>Birth city</span>
+              <span>出生城市</span>
               <input type="text" value={birth.birthLocation} onChange={(event) => setBirth((current) => ({ ...current, birthLocation: event.target.value }))} required />
             </label>
             <label>
-              <span>Timezone</span>
+              <span>时区</span>
               <input type="text" value={birth.timezone} onChange={(event) => setBirth((current) => ({ ...current, timezone: event.target.value }))} required />
             </label>
             <label>
-              <span>Gender</span>
+              <span>性别</span>
               <select value={birth.gender} onChange={(event) => setBirth((current) => ({ ...current, gender: event.target.value }))}>
-                <option value="UNSPECIFIED">Prefer not to say</option>
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-                <option value="OTHER">Other</option>
+                <option value="UNSPECIFIED">不方便透露</option>
+                <option value="MALE">男性</option>
+                <option value="FEMALE">女性</option>
+                <option value="OTHER">其他</option>
               </select>
             </label>
           </div>
           <div className="ctaRow">
-            <button className="button primary" type="submit" disabled={busy}>{busy ? "Saving..." : "Continue"}</button>
+            <button className="button primary" type="submit" disabled={busy}>{busy ? "保存中..." : "继续"}</button>
           </div>
         </form>
       ) : null}
@@ -182,40 +182,40 @@ export function StartReadingWizard() {
       {step === 2 ? (
         <form className="intakeForm" onSubmit={handleQuestionnaireSubmit}>
           <div className="feedback success">
-            <strong>Birth profile saved</strong>
+            <strong>出生资料已保存</strong>
             <p>{birthProfileId}</p>
           </div>
 
           <div className="fieldGrid">
             <label>
-              <span>Reading title</span>
-              <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Career Pivot - Q2 2026" />
+              <span>读取标题</span>
+              <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="例如：事业转折 - 2026 Q2" />
             </label>
             <label>
-              <span>Theme</span>
-              <select value={theme} onChange={(event) => setTheme(event.target.value)}>
-                <option value="CAREER">Career</option>
-                <option value="WEALTH">Wealth</option>
-                <option value="LOVE">Love</option>
-                <option value="HEALTH">Health</option>
+              <span>主题</span>
+              <select value={theme} onChange={(event) => set主题(event.target.value)}>
+                <option value="CAREER">事业</option>
+                <option value="WEALTH">财富</option>
+                <option value="LOVE">感情</option>
+                <option value="HEALTH">健康</option>
               </select>
             </label>
           </div>
 
           <label>
-            <span>Reading note</span>
-            <textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Context, deadline, people involved, or why this reading matters." rows={4} />
+            <span>读取备注</span>
+            <textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="记录背景、时间节点、相关人物，或这次读取的重要原因。" rows={4} />
           </label>
 
           <label>
-            <span>Current question</span>
+            <span>当前问题</span>
             <input type="text" value={question} onChange={(event) => setQuestion(event.target.value)} required />
           </label>
 
           <div className="cardSection">
             <div className="sectionHeader">
-              <h3>Mind</h3>
-              <p>Rate each statement from 1 to 7.</p>
+              <h3>心念</h3>
+              <p>请按 1 到 7 分评分。</p>
             </div>
             <div className="questionList">
               {mindQuestions.map((item, index) => (
@@ -230,7 +230,7 @@ export function StartReadingWizard() {
                     onChange={(event) => {
                       const next = [...mindAnswers];
                       next[index] = Number(event.target.value);
-                      setMindAnswers(next);
+                      set心念Answers(next);
                     }}
                   />
                   <strong>{mindAnswers[index]}</strong>
@@ -241,8 +241,8 @@ export function StartReadingWizard() {
 
           <div className="cardSection">
             <div className="sectionHeader">
-              <h3>Action</h3>
-              <p>Score each statement from 0 to 2.</p>
+              <h3>行动</h3>
+              <p>请按 0 到 2 分评分。</p>
             </div>
             <div className="questionList">
               {actionQuestions.map((item, index) => (
@@ -253,12 +253,12 @@ export function StartReadingWizard() {
                     onChange={(event) => {
                       const next = [...actionAnswers];
                       next[index] = Number(event.target.value);
-                      setActionAnswers(next);
+                      set行动Answers(next);
                     }}
                   >
-                    <option value="0">0 - No</option>
-                    <option value="1">1 - Partial</option>
-                    <option value="2">2 - Yes</option>
+                    <option value="0">0 - 否</option>
+                    <option value="1">1 - 部分符合</option>
+                    <option value="2">2 - 是</option>
                   </select>
                 </label>
               ))}
@@ -266,8 +266,8 @@ export function StartReadingWizard() {
           </div>
 
           <div className="ctaRow">
-            <button className="button" type="button" onClick={() => setStep(1)} disabled={busy}>Back</button>
-            <button className="button primary" type="submit" disabled={busy}>{busy ? "Saving..." : "Continue"}</button>
+            <button className="button" type="button" onClick={() => setStep(1)} disabled={busy}>返回</button>
+            <button className="button primary" type="submit" disabled={busy}>{busy ? "保存中..." : "继续"}</button>
           </div>
         </form>
       ) : null}
@@ -275,17 +275,17 @@ export function StartReadingWizard() {
       {step === 3 ? (
         <div className="intakeForm">
           <div className="feedback success">
-            <strong>Reading ready</strong>
+            <strong>读取已准备完成</strong>
             <p>{title || question}</p>
             <code>{readingId}</code>
           </div>
           <p>
-            The last step writes the 4-card draw. After that, the result page will auto-run score and AI report.
+            最后一步会写入 4 张命运卡抽牌结果。完成后，结果页会自动评分并自动生成 AI 报告。
           </p>
           <div className="ctaRow">
-            <button className="button" type="button" onClick={() => setStep(2)} disabled={busy}>Back</button>
+            <button className="button" type="button" onClick={() => setStep(2)} disabled={busy}>返回</button>
             <button className="button primary" type="button" onClick={handleCardDraw} disabled={busy}>
-              {busy ? "Drawing..." : "Draw Cards And Finish"}
+              {busy ? "抽牌中..." : "抽牌并完成"}
             </button>
           </div>
         </div>

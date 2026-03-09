@@ -70,11 +70,10 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
   return (
     <main>
       <section className="hero heroCompact">
-        <div className="eyebrow">Reading Result</div>
+        <div className="eyebrow">读取结果</div>
         <h1>{title}</h1>
         <p>
-          This page combines the birth profile, questionnaire, card draw, scoring output, the latest saved AI
-          report, and a persisted Ziwei chart summary. Structure and timing now come from the preset_A Ziwei engine.
+          这个页面汇总了出生资料、问卷、抽牌结果、评分输出、最新 AI 报告，以及已持久化的紫微摘要。结构与时运现在来自 preset_A 紫微引擎。
         </p>
         <ReadingMetaEditor readingId={reading.id} initialTitle={reading.title ?? ""} initialNote={reading.note ?? ""} />
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
@@ -83,79 +82,79 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 4" }}>
-          <h2>Input Snapshot</h2>
+          <h2>输入快照</h2>
           <ul>
-            <li>Reading ID: {reading.id}</li>
-            <li>Theme: {reading.theme}</li>
-            <li>Status: {reading.status}</li>
-            <li>Question: {reading.question}</li>
-            <li>Birth city: {reading.birthProfile?.birthLocation ?? "-"}</li>
-            <li>Timezone: {reading.birthProfile?.timezone ?? "-"}</li>
+            <li>读取 ID：{reading.id}</li>
+            <li>主题：{reading.theme}</li>
+            <li>状态：{reading.status}</li>
+            <li>问题：{reading.question}</li>
+            <li>出生城市：{reading.birthProfile?.birthLocation ?? "-"}</li>
+            <li>时区：{reading.birthProfile?.timezone ?? "-"}</li>
           </ul>
         </article>
 
         <article className="card" style={{ gridColumn: "span 4" }}>
-          <h2>Five-Dimension Inputs</h2>
+          <h2>五维输入</h2>
           <ul>
-            <li>Structure: {reading.fiveDimensionInput?.structureValue ?? "-"}</li>
-            <li>Timing: {reading.fiveDimensionInput?.timingValue ?? "-"}</li>
-            <li>Energy: {reading.fiveDimensionInput?.energyValue ?? "-"}</li>
-            <li>Mind: {reading.fiveDimensionInput?.mindValue ?? "-"}</li>
-            <li>Action: {reading.fiveDimensionInput?.actionValue ?? "-"}</li>
+            <li>结构：{reading.fiveDimensionInput?.structureValue ?? "-"}</li>
+            <li>时运：{reading.fiveDimensionInput?.timingValue ?? "-"}</li>
+            <li>能量：{reading.fiveDimensionInput?.energyValue ?? "-"}</li>
+            <li>心念：{reading.fiveDimensionInput?.mindValue ?? "-"}</li>
+            <li>行动：{reading.fiveDimensionInput?.actionValue ?? "-"}</li>
           </ul>
         </article>
 
         <article className="card" style={{ gridColumn: "span 4" }}>
-          <h2>Questionnaire</h2>
+          <h2>问卷</h2>
           <ul>
-            <li>Mind average: {reading.questionnaireResult?.mindAverage ?? "-"}</li>
-            <li>Mind factor: {reading.questionnaireResult?.mindFactor ?? "-"}</li>
-            <li>Action total: {reading.questionnaireResult?.actionTotal ?? "-"}</li>
-            <li>Action raw: {reading.questionnaireResult?.actionRaw ?? "-"}</li>
-            <li>Action label: {reading.questionnaireResult?.actionLabel ?? "-"}</li>
+            <li>心念平均分：{reading.questionnaireResult?.mindAverage ?? "-"}</li>
+            <li>心念系数：{reading.questionnaireResult?.mindFactor ?? "-"}</li>
+            <li>行动总分：{reading.questionnaireResult?.actionTotal ?? "-"}</li>
+            <li>行动原始值：{reading.questionnaireResult?.actionRaw ?? "-"}</li>
+            <li>行动标签：{reading.questionnaireResult?.actionLabel ?? "-"}</li>
           </ul>
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Ziwei Summary</h2>
+          <h2>紫微摘要</h2>
           {ziweiSummary ? (
             <ul>
-              <li>Engine: {ziweiSummary.engineVersion ?? "-"}</li>
-              <li>School: {ziweiSummary.school ?? "-"}</li>
-              <li>Life palace: {ziweiSummary.lifePalace?.label ?? "-"}</li>
-              <li>Body palace: {ziweiSummary.bodyPalace?.label ?? "-"}</li>
-              <li>Focus theme source: {ziweiSummary.focusTheme ?? "-"}</li>
+              <li>引擎：{ziweiSummary.engineVersion ?? "-"}</li>
+              <li>流派：{ziweiSummary.school ?? "-"}</li>
+              <li>命宫：{ziweiSummary.lifePalace?.label ?? "-"}</li>
+              <li>身宫：{ziweiSummary.bodyPalace?.label ?? "-"}</li>
+              <li>主题聚焦来源：{ziweiSummary.focusTheme ?? "-"}</li>
             </ul>
           ) : (
-            <p>No Ziwei chart summary has been saved yet. Compute the score first.</p>
+            <p>还没有保存紫微摘要。请先完成评分。</p>
           )}
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Card Draw</h2>
+          <h2>抽牌结果</h2>
           {reading.cardDraw ? (
             <ul>
-              <li>Raw energy: {reading.cardDraw.rawEnergyScore}</li>
-              <li>Mapped energy: {reading.cardDraw.mappedEnergyScore}</li>
-              <li>Draw payload saved in `card_draws.draw_json`.</li>
+              <li>原始能量：{reading.cardDraw.rawEnergyScore}</li>
+              <li>映射能量：{reading.cardDraw.mappedEnergyScore}</li>
+              <li>抽牌详情已保存到 `card_draws.draw_json`。</li>
             </ul>
           ) : (
-            <p>No card draw attached yet.</p>
+            <p>当前还没有绑定抽牌结果。</p>
           )}
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Score Summary</h2>
+          <h2>评分摘要</h2>
           {reading.fiveDimensionScore ? (
             <>
               <p>
-                Focus trend: <strong>{breakdown?.focusTrend ?? "-"}</strong>
+                核心趋势：<strong>{breakdown?.focusTrend ?? "-"}</strong>
               </p>
               <p>
-                Dominant factor: <strong>{reading.fiveDimensionScore.dominantFactor}</strong>
+                主导因素：<strong>{reading.fiveDimensionScore.dominantFactor}</strong>
               </p>
               <p>
-                Risk flags: <strong>{((reading.fiveDimensionScore.riskFlagsJson as string[]) ?? []).join(", ") || "none"}</strong>
+                风险标签：<strong>{((reading.fiveDimensionScore.riskFlagsJson as string[]) ?? []).join(", ") || "none"}</strong>
               </p>
               <div className="drawResultGrid">
                 {themes.map(([key, value]) => (
@@ -163,28 +162,28 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
                     <h3>{value.label}</h3>
                     <p>{value.trend}</p>
                     <strong>{value.score}</strong>
-                    <p>Structure {value.structure} x Timing {value.timing}</p>
-                    <p>Energy {value.energy} | Mind {value.mind} | Action {value.actionDisplay}</p>
+                    <p>结构 {value.structure} × 时运 {value.timing}</p>
+                    <p>能量 {value.energy} | 心念 {value.mind} | 行动 {value.actionDisplay}</p>
                   </article>
                 ))}
               </div>
             </>
           ) : (
-            <p>No score has been computed yet. Run the scoring step first.</p>
+            <p>当前还没有评分结果，请先完成评分。</p>
           )}
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Latest AI Report</h2>
+          <h2>最新 AI 报告</h2>
           {latestReport ? (
             <>
               <p>
-                Version: <strong>{latestReport.reportVersion}</strong>
+                版本：<strong>{latestReport.reportVersion}</strong>
               </p>
               <pre className="codeBlock reportBlock">{latestReport.reportText}</pre>
             </>
           ) : (
-            <p>No AI report has been saved yet. The page will generate one automatically after scoring.</p>
+            <p>当前还没有 AI 报告。评分完成后，页面会自动生成。</p>
           )}
         </article>
       </section>

@@ -30,16 +30,16 @@ type SubmitState = {
   readingId?: string;
 };
 
-const initialMindAnswers = mindQuestions.map(() => 4);
-const initialActionAnswers = actionQuestions.map(() => 1);
+const initial心念Answers = mindQuestions.map(() => 4);
+const initial行动Answers = actionQuestions.map(() => 1);
 
 export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirthProfileId?: string }) {
   const router = useRouter();
   const [birthProfileId, setBirthProfileId] = useState(initialBirthProfileId);
-  const [question, setQuestion] = useState("What is the current trend for my career?");
-  const [theme, setTheme] = useState("CAREER");
-  const [mindAnswers, setMindAnswers] = useState<number[]>(initialMindAnswers);
-  const [actionAnswers, setActionAnswers] = useState<number[]>(initialActionAnswers);
+  const [question, setQuestion] = useState("我最近的事业趋势如何？");
+  const [theme, set主题] = useState("CAREER");
+  const [mindAnswers, set心念Answers] = useState<number[]>(initial心念Answers);
+  const [actionAnswers, set行动Answers] = useState<number[]>(initial行动Answers);
   const [submitState, setSubmitState] = useState<SubmitState>({ status: "idle" });
 
   const mindAverage = useMemo(() => {
@@ -75,12 +75,12 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
       };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to save questionnaire.");
+        throw new Error(payload.error || "问卷保存失败。");
       }
 
       setSubmitState({
         status: "success",
-        message: "Questionnaire saved. Redirecting to card draw.",
+        message: "问卷已保存，正在跳转到抽牌。",
         readingId: payload.data.readingId
       });
 
@@ -88,7 +88,7 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
     } catch (error) {
       setSubmitState({
         status: "error",
-        message: error instanceof Error ? error.message : "Unexpected error."
+        message: error instanceof Error ? error.message : "发生未知错误。"
       });
     }
   }
@@ -97,10 +97,10 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
     <form className="intakeForm" onSubmit={handleSubmit}>
       <div className="fieldGrid">
         <label>
-          <span>Birth profile ID</span>
+          <span>出生资料 ID</span>
           <input
             type="text"
-            placeholder="Auto-filled from the previous step"
+            placeholder="由上一步自动带入"
             value={birthProfileId}
             onChange={(event) => setBirthProfileId(event.target.value)}
             required
@@ -108,25 +108,25 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
         </label>
 
         <label>
-          <span>Theme</span>
-          <select value={theme} onChange={(event) => setTheme(event.target.value)}>
-            <option value="CAREER">Career</option>
-            <option value="WEALTH">Wealth</option>
-            <option value="LOVE">Love</option>
-            <option value="HEALTH">Health</option>
+          <span>主题</span>
+          <select value={theme} onChange={(event) => set主题(event.target.value)}>
+            <option value="CAREER">事业</option>
+            <option value="WEALTH">财富</option>
+            <option value="LOVE">感情</option>
+            <option value="HEALTH">健康</option>
           </select>
         </label>
       </div>
 
       <label>
-        <span>Current question</span>
+        <span>当前问题</span>
         <input type="text" value={question} onChange={(event) => setQuestion(event.target.value)} required />
       </label>
 
       <div className="cardSection">
         <div className="sectionHeader">
-          <h3>Mind</h3>
-          <p>Rate each statement from 1 to 7.</p>
+          <h3>心念</h3>
+          <p>请按 1 到 7 分评分。</p>
         </div>
         <div className="questionList">
           {mindQuestions.map((item, index) => (
@@ -141,20 +141,20 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
                 onChange={(event) => {
                   const next = [...mindAnswers];
                   next[index] = Number(event.target.value);
-                  setMindAnswers(next);
+                  set心念Answers(next);
                 }}
               />
               <strong>{mindAnswers[index]}</strong>
             </label>
           ))}
         </div>
-        <div className="summaryLine">Mind average: {mindAverage.toFixed(1)}</div>
+        <div className="summaryLine">心念 average: {mindAverage.toFixed(1)}</div>
       </div>
 
       <div className="cardSection">
         <div className="sectionHeader">
-          <h3>Action</h3>
-          <p>Score each statement from 0 to 2.</p>
+          <h3>行动</h3>
+          <p>请按 0 到 2 分评分。</p>
         </div>
         <div className="questionList">
           {actionQuestions.map((item, index) => (
@@ -165,31 +165,31 @@ export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirth
                 onChange={(event) => {
                   const next = [...actionAnswers];
                   next[index] = Number(event.target.value);
-                  setActionAnswers(next);
+                  set行动Answers(next);
                 }}
               >
-                <option value="0">0 - No</option>
-                <option value="1">1 - Partial</option>
-                <option value="2">2 - Yes</option>
+                <option value="0">0 - 否</option>
+                <option value="1">1 - 部分符合</option>
+                <option value="2">2 - 是</option>
               </select>
             </label>
           ))}
         </div>
-        <div className="summaryLine">Action total: {actionTotal} / 10</div>
+        <div className="summaryLine">行动 total: {actionTotal} / 10</div>
       </div>
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={submitState.status === "submitting"}>
-          {submitState.status === "submitting" ? "Saving..." : "Save And Continue"}
+          {submitState.status === "submitting" ? "保存中..." : "保存并继续"}
         </button>
         <a className="button" href="/birth-profile">
-          Back to Birth Profile
+          返回出生资料
         </a>
       </div>
 
       {submitState.status !== "idle" ? (
         <div className={`feedback ${submitState.status}`}>
-          <strong>{submitState.status === "success" ? "Saved" : "Status"}</strong>
+          <strong>{submitState.status === "success" ? "已保存" : "状态"}</strong>
           <p>{submitState.message}</p>
           {submitState.readingId ? <code>{submitState.readingId}</code> : null}
         </div>

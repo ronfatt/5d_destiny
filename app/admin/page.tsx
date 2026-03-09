@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 function formatDate(value: Date | null | undefined) {
   if (!value) return "-";
-  return new Intl.DateTimeFormat("en-MY", {
+  return new Intl.DateTimeFormat("zh-CN", {
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -80,23 +80,20 @@ export default async function AdminPage() {
   ]);
 
   const statCards = [
-    { label: "Users", value: totalUsers },
-    { label: "Birth Profiles", value: totalBirthProfiles },
-    { label: "Readings", value: totalReadings },
-    { label: "Reports", value: totalReports },
-    { label: "Destiny Cards", value: totalCards },
-    { label: "Ziwei Charts", value: totalCharts }
+    { label: "用户数", value: totalUsers },
+    { label: "出生资料数", value: totalBirthProfiles },
+    { label: "读取数", value: totalReadings },
+    { label: "报告数", value: totalReports },
+    { label: "命运卡数", value: totalCards },
+    { label: "紫微命盘数", value: totalCharts }
   ];
 
   return (
     <main>
       <section className="hero heroCompact">
-        <div className="eyebrow">Admin Console</div>
-        <h1>Monitor readings, reports, cards, and Ziwei chart generation.</h1>
-        <p>
-          This page is the first internal operations surface. It shows whether the five-dimension pipeline is
-          writing real records across the system, not just returning transient API responses.
-        </p>
+        <div className="eyebrow">后台控制台</div>
+        <h1>查看读取、报告、卡牌与紫微命盘生成情况。</h1>
+        <p>这是第一版内部运营界面，用来确认五维主链是否真的在持续写入数据库，而不是只返回临时接口结果。</p>
       </section>
 
       <section className="statsGrid">
@@ -110,18 +107,18 @@ export default async function AdminPage() {
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Latest Readings</h2>
+          <h2>最新读取</h2>
           <div className="tableWrap">
             <table className="dataTable">
               <thead>
                 <tr>
-                  <th>Reading</th>
-                  <th>Theme</th>
-                  <th>Status</th>
-                  <th>Birth City</th>
-                  <th>Scores</th>
-                  <th>Latest Report</th>
-                  <th>Created</th>
+                  <th>读取</th>
+                  <th>主题</th>
+                  <th>状态</th>
+                  <th>出生城市</th>
+                  <th>分数</th>
+                  <th>最新报告</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,7 +132,7 @@ export default async function AdminPage() {
                     <td>{reading.birthProfile?.birthLocation ?? "-"}</td>
                     <td>
                       {reading.fiveDimensionScore
-                        ? `C ${reading.fiveDimensionScore.careerScore} / W ${reading.fiveDimensionScore.wealthScore} / L ${reading.fiveDimensionScore.loveScore} / H ${reading.fiveDimensionScore.healthScore}`
+                        ? `事业 ${reading.fiveDimensionScore.careerScore} / 财富 ${reading.fiveDimensionScore.wealthScore} / 感情 ${reading.fiveDimensionScore.loveScore} / 健康 ${reading.fiveDimensionScore.healthScore}`
                         : "-"}
                     </td>
                     <td>{reading.reports[0]?.reportVersion ?? "-"}</td>
@@ -148,15 +145,15 @@ export default async function AdminPage() {
         </article>
 
         <article className="card" style={{ gridColumn: "span 6" }}>
-          <h2>Latest Reports</h2>
+          <h2>最新报告</h2>
           <div className="tableWrap">
             <table className="dataTable">
               <thead>
                 <tr>
-                  <th>Report</th>
-                  <th>Reading</th>
-                  <th>Version</th>
-                  <th>Created</th>
+                  <th>报告</th>
+                  <th>读取</th>
+                  <th>版本</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>
@@ -176,16 +173,16 @@ export default async function AdminPage() {
         </article>
 
         <article className="card" style={{ gridColumn: "span 6" }}>
-          <h2>Latest Birth Profiles</h2>
+          <h2>最新出生资料</h2>
           <div className="tableWrap">
             <table className="dataTable">
               <thead>
                 <tr>
-                  <th>Profile</th>
-                  <th>User</th>
-                  <th>Location</th>
-                  <th>Birth Time</th>
-                  <th>Created</th>
+                  <th>资料</th>
+                  <th>用户</th>
+                  <th>地点</th>
+                  <th>出生时间</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,17 +201,17 @@ export default async function AdminPage() {
         </article>
 
         <article className="card" style={{ gridColumn: "span 12" }}>
-          <h2>Latest Ziwei Charts</h2>
+          <h2>最新紫微命盘</h2>
           <div className="tableWrap">
             <table className="dataTable">
               <thead>
                 <tr>
-                  <th>Chart</th>
-                  <th>Birth Profile</th>
-                  <th>Location</th>
-                  <th>Engine</th>
-                  <th>School</th>
-                  <th>Created</th>
+                  <th>命盘</th>
+                  <th>出生资料</th>
+                  <th>地点</th>
+                  <th>引擎</th>
+                  <th>流派</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>

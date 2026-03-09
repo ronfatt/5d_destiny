@@ -7,32 +7,31 @@ export default async function AuthPage() {
   return (
     <main>
       <section className="hero heroCompact">
-        <div className="eyebrow">Account Access</div>
-        <h1>Login and keep your readings attached to a real account.</h1>
+        <div className="eyebrow">账户入口</div>
+        <h1>登录后，把你的读取结果正式归档到真实账户。</h1>
         <p>
-          Logged-in users stop creating throwaway guest profiles. New birth profiles, readings, card draws, and reports
-          stay connected to the same user and become visible in history.
+          登录后，系统将不再继续创建临时游客资料。之后的新出生资料、读取记录、抽牌结果和报告都会绑定到同一个用户，并出现在历史记录中。
         </p>
         {user ? (
           <div className="feedback success">
-            <strong>Signed in as {user.displayName ?? user.email}</strong>
-            <p>Your next intake will attach to this account.</p>
+            <strong>当前登录：{user.displayName ?? user.email}</strong>
+            <p>你接下来的输入都会绑定到这个账户。</p>
           </div>
         ) : null}
       </section>
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 7" }}>
-          <h2>Email Access</h2>
+          <h2>邮箱登录 / 注册</h2>
           <AuthClient />
         </article>
 
         <article className="card" style={{ gridColumn: "span 5" }}>
-          <h2>Current Rule</h2>
+          <h2>当前规则</h2>
           <ul>
-            <li>Logged-in user: new birth profiles and readings reuse the same user account.</li>
-            <li>Anonymous user: the app still falls back to guest mode so the MVP pipeline keeps working.</li>
-            <li>History page only shows records for the current signed-in user.</li>
+            <li>已登录用户：新的出生资料和读取会复用当前账户。</li>
+            <li>未登录用户：系统仍会回退到游客模式，保证 MVP 流程不中断。</li>
+            <li>历史页只显示当前登录账户的数据。</li>
           </ul>
         </article>
       </section>

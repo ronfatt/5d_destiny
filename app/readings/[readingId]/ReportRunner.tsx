@@ -8,7 +8,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
   const hasAutoRun = useRef(false);
   const [status, setStatus] = useState<"idle" | "running" | "error">(hasReport ? "idle" : "running");
   const [message, setMessage] = useState<string | undefined>(
-    hasReport ? undefined : "Generating AI report automatically..."
+    hasReport ? undefined : "正在自动生成 AI 报告..."
   );
 
   async function runReport() {
@@ -22,7 +22,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "Failed to generate report.");
+        throw new Error(payload.error || "AI 报告生成失败。");
       }
 
       router.refresh();
@@ -30,7 +30,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
       setMessage(undefined);
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Unexpected error.");
+      setMessage(error instanceof Error ? error.message : "发生未知错误。");
     }
   }
 
@@ -46,7 +46,7 @@ export function ReportRunner({ readingId, hasReport }: { readingId: string; hasR
   return (
     <div className="ctaRow">
       <button className="button" type="button" onClick={runReport} disabled={status === "running"}>
-        {status === "running" ? "Generating Report..." : hasReport ? "Regenerate AI Report" : "Generate AI Report"}
+        {status === "running" ? "报告生成中..." : hasReport ? "重新生成 AI 报告" : "生成 AI 报告"}
       </button>
       {message ? <div className={status === "error" ? "inlineError" : "feedback success inlineNotice"}>{message}</div> : null}
     </div>

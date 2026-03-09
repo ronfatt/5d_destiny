@@ -7,7 +7,7 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
   const router = useRouter();
   const hasAutoRun = useRef(false);
   const [status, setStatus] = useState<"idle" | "running" | "error">(hasScore ? "idle" : "running");
-  const [message, setMessage] = useState<string | undefined>(hasScore ? undefined : "Computing score automatically...");
+  const [message, setMessage] = useState<string | undefined>(hasScore ? undefined : "正在自动计算分数...");
 
   async function runScore() {
     setStatus("running");
@@ -20,7 +20,7 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
       const payload = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(payload.error || "Failed to compute score.");
+        throw new Error(payload.error || "评分失败。");
       }
 
       router.refresh();
@@ -28,7 +28,7 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
       setMessage(undefined);
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Unexpected error.");
+      setMessage(error instanceof Error ? error.message : "发生未知错误。");
     }
   }
 
@@ -44,10 +44,10 @@ export function ScoreRunner({ readingId, hasScore }: { readingId: string; hasSco
   return (
     <div className="ctaRow">
       <button className="button primary" type="button" onClick={runScore} disabled={status === "running"}>
-        {status === "running" ? "Computing..." : hasScore ? "Recompute Score" : "Compute Score"}
+        {status === "running" ? "计算中..." : hasScore ? "重新评分" : "计算分数"}
       </button>
       <a className="button" href="/card-draw">
-        Back to Card Draw
+        返回抽牌
       </a>
       {message ? <div className={status === "error" ? "inlineError" : "feedback success inlineNotice"}>{message}</div> : null}
     </div>

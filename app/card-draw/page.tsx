@@ -10,27 +10,26 @@ export default async function CardDrawPage({ searchParams }: CardDrawPageProps) 
   return (
     <main>
       <section className="hero heroCompact">
-        <div className="eyebrow">Destiny Card System</div>
-        <h1>Draw the energy layer and attach it to the current reading.</h1>
+        <div className="eyebrow">命运卡系统</div>
+        <h1>抽取能量层，并绑定到当前 reading。</h1>
         <p>
-          The reading id now flows in automatically from questionnaire. Once the draw completes, the app sends you
-          directly to the result page where scoring and AI reporting can continue.
+          reading id 现在会从问卷自动带入。抽牌完成后，系统会直接把你送到结果页，并继续自动评分和生成 AI 报告。
         </p>
       </section>
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 8" }}>
-          <h2>Card Draw</h2>
-          <p>One archetype, two energy cards, and one event card feed the `Energy` variable.</p>
+          <h2>抽牌</h2>
+          <p>1 张原型卡、2 张能量卡、1 张事件卡，共同构成 `Energy` 变量。</p>
           <CardDrawForm initialReadingId={params.readingId ?? ""} />
         </article>
 
         <article className="card" style={{ gridColumn: "span 4" }}>
-          <h2>What This Updates</h2>
+          <h2>这一步会更新</h2>
           <ul>
-            <li>Seeds the 50-card catalog into the database if missing.</li>
-            <li>Creates or replaces the card draw record for the current reading.</li>
-            <li>Updates `five_dimension_inputs.energy_value` with the mapped energy score.</li>
+            <li>如数据库缺失，会先写入 50 张命运卡基础数据。</li>
+            <li>为当前 reading 创建或覆盖抽牌记录。</li>
+            <li>将映射后的能量值写回 `five_dimension_inputs.energy_value`。</li>
           </ul>
         </article>
       </section>

@@ -31,7 +31,7 @@ export function BirthProfileForm() {
     event.preventDefault();
 
     if (!canSubmit) {
-      setSubmitState({ status: "error", message: "Please complete all required fields." });
+      setSubmitState({ status: "error", message: "请完整填写所有必填项。" });
       return;
     }
 
@@ -54,12 +54,12 @@ export function BirthProfileForm() {
       };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to save birth profile.");
+        throw new Error(payload.error || "出生资料保存失败。");
       }
 
       setSubmitState({
         status: "success",
-        message: "Birth profile saved. Redirecting to questionnaire.",
+        message: "出生资料已保存，正在跳转到问卷。",
         birthProfileId: payload.data.id
       });
 
@@ -67,7 +67,7 @@ export function BirthProfileForm() {
     } catch (error) {
       setSubmitState({
         status: "error",
-        message: error instanceof Error ? error.message : "Unexpected error."
+        message: error instanceof Error ? error.message : "发生未知错误。"
       });
     }
   }
@@ -76,7 +76,7 @@ export function BirthProfileForm() {
     <form className="intakeForm" onSubmit={handleSubmit}>
       <div className="fieldGrid">
         <label>
-          <span>Birth date</span>
+          <span>出生日期</span>
           <input
             type="date"
             value={form.birthDate}
@@ -86,7 +86,7 @@ export function BirthProfileForm() {
         </label>
 
         <label>
-          <span>Birth time</span>
+          <span>出生时间</span>
           <input
             type="time"
             value={form.birthTime}
@@ -96,7 +96,7 @@ export function BirthProfileForm() {
         </label>
 
         <label>
-          <span>Birth city</span>
+          <span>出生城市</span>
           <input
             type="text"
             placeholder="Kuala Lumpur"
@@ -107,7 +107,7 @@ export function BirthProfileForm() {
         </label>
 
         <label>
-          <span>Timezone</span>
+          <span>时区</span>
           <input
             type="text"
             placeholder="Asia/Kuala_Lumpur"
@@ -118,22 +118,22 @@ export function BirthProfileForm() {
         </label>
 
         <label>
-          <span>Gender</span>
+          <span>性别</span>
           <select
             value={form.gender}
             onChange={(event) => setForm((current) => ({ ...current, gender: event.target.value }))}
           >
-            <option value="UNSPECIFIED">Prefer not to say</option>
-            <option value="MALE">Male</option>
-            <option value="FEMALE">Female</option>
-            <option value="OTHER">Other</option>
+            <option value="UNSPECIFIED">不方便透露</option>
+            <option value="MALE">男性</option>
+            <option value="FEMALE">女性</option>
+            <option value="OTHER">其他</option>
           </select>
         </label>
       </div>
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={!canSubmit || submitState.status === "submitting"}>
-          {submitState.status === "submitting" ? "Saving..." : "Save And Continue"}
+          {submitState.status === "submitting" ? "保存中..." : "保存并继续"}
         </button>
         <a className="button" href="/history">
           History
@@ -142,7 +142,7 @@ export function BirthProfileForm() {
 
       {submitState.status !== "idle" ? (
         <div className={`feedback ${submitState.status}`}>
-          <strong>{submitState.status === "success" ? "Saved" : "Status"}</strong>
+          <strong>{submitState.status === "success" ? "已保存" : "状态"}</strong>
           <p>{submitState.message}</p>
           {submitState.birthProfileId ? <code>{submitState.birthProfileId}</code> : null}
         </div>

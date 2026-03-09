@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 function formatDate(value: Date | null | undefined) {
   if (!value) return "-";
-  return new Intl.DateTimeFormat("en-MY", {
+  return new Intl.DateTimeFormat("zh-CN", {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(value);
@@ -19,20 +19,20 @@ function getResumeAction(reading: {
   if (!reading.cardDraw) {
     return {
       href: `/card-draw?readingId=${reading.id}`,
-      label: "Continue Draw"
+      label: "继续抽牌"
     };
   }
 
   if (!reading.fiveDimensionScore || reading.reports.length === 0) {
     return {
       href: `/readings/${reading.id}`,
-      label: "Finish Result"
+      label: "完成结果页"
     };
   }
 
   return {
     href: `/readings/${reading.id}`,
-    label: "Open Result"
+    label: "打开结果"
   };
 }
 
@@ -66,41 +66,41 @@ export default async function HistoryPage() {
   return (
     <main>
       <section className="hero heroCompact">
-        <div className="eyebrow">History</div>
+        <div className="eyebrow">历史记录</div>
         <h1>{user.displayName ?? user.email}</h1>
-        <p>Review your saved birth profiles, completed readings, and resume anything that stopped mid-flow.</p>
+        <p>查看已保存的出生资料、已完成读取，并继续任何中断的流程。</p>
         <div className="ctaRow">
-          <a className="button primary" href="/start">Start Reading</a>
-          <a className="button" href="/birth-profile">Birth Profiles</a>
-          <a className="button" href="/auth">Account</a>
+          <a className="button primary" href="/start">开始读取</a>
+          <a className="button" href="/birth-profile">出生资料</a>
+          <a className="button" href="/auth">账户</a>
         </div>
       </section>
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 4" }}>
-          <h2>Birth Profiles</h2>
+          <h2>出生资料</h2>
           <ul>
             {birthProfiles.length ? birthProfiles.map((profile) => (
               <li key={profile.id}>
                 {profile.birthLocation} · {profile.birthTime} · {formatDate(profile.createdAt)}
               </li>
-            )) : <li>No saved birth profiles yet.</li>}
+            )) : <li>还没有保存的出生资料。</li>}
           </ul>
         </article>
 
         <article className="card" style={{ gridColumn: "span 8" }}>
-          <h2>Readings</h2>
+          <h2>读取记录</h2>
           <div className="tableWrap">
             <table className="dataTable">
               <thead>
                 <tr>
-                  <th>Reading</th>
-                  <th>Theme</th>
-                  <th>Status</th>
-                  <th>Score</th>
-                  <th>Report</th>
-                  <th>Action</th>
-                  <th>Created</th>
+                  <th>读取</th>
+                  <th>主题</th>
+                  <th>状态</th>
+                  <th>分数</th>
+                  <th>报告</th>
+                  <th>操作</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,7 +137,7 @@ export default async function HistoryPage() {
                   );
                 }) : (
                   <tr>
-                    <td colSpan={7}>No readings saved under this account yet.</td>
+                    <td colSpan={7}>这个账户下还没有保存任何读取记录。</td>
                   </tr>
                 )}
               </tbody>

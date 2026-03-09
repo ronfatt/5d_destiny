@@ -37,16 +37,16 @@ export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: str
       const payload = (await response.json()) as { error?: string; data?: DrawResponse };
 
       if (!response.ok || !payload.data) {
-        throw new Error(payload.error || "Failed to draw cards.");
+        throw new Error(payload.error || "抽牌失败。");
       }
 
       setResult(payload.data);
       setStatus("success");
-      setMessage("Cards drawn. Redirecting to the result page.");
+      setMessage("抽牌已完成，正在跳转到结果页。");
       router.push(`/readings/${payload.data.readingId}`);
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Unexpected error.");
+      setMessage(error instanceof Error ? error.message : "发生未知错误。");
     }
   }
 
@@ -56,7 +56,7 @@ export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: str
         <span>Reading ID</span>
         <input
           type="text"
-          placeholder="Auto-filled from the questionnaire step"
+          placeholder="由问卷步骤自动带入"
           value={readingId}
           onChange={(event) => setReadingId(event.target.value)}
           required
@@ -65,16 +65,16 @@ export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: str
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={status === "submitting"}>
-          {status === "submitting" ? "Drawing..." : "Draw Cards And Continue"}
+          {status === "submitting" ? "抽牌中..." : "抽牌并继续"}
         </button>
         <a className="button" href="/questionnaire">
-          Back to Questionnaire
+          返回问卷
         </a>
       </div>
 
       {status !== "idle" && message ? (
         <div className={`feedback ${status === "success" ? "success" : "error"}`}>
-          <strong>{status === "success" ? "Draw Complete" : "Status"}</strong>
+          <strong>{status === "success" ? "抽牌完成" : "状态"}</strong>
           <p>{message}</p>
           {result ? <code>{result.readingId}</code> : null}
         </div>
@@ -83,29 +83,29 @@ export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: str
       {result ? (
         <div className="drawResultGrid">
           <article className="card compactCard">
-            <h3>Archetype</h3>
+            <h3>原型卡</h3>
             <p>{result.draw.archetype.name}</p>
             <strong>{result.draw.archetype.value}</strong>
           </article>
           <article className="card compactCard">
-            <h3>Energy I</h3>
+            <h3>能量卡一</h3>
             <p>{result.draw.energy1.name}</p>
             <strong>{result.draw.energy1.value}</strong>
           </article>
           <article className="card compactCard">
-            <h3>Energy II</h3>
+            <h3>能量卡二</h3>
             <p>{result.draw.energy2.name}</p>
             <strong>{result.draw.energy2.value}</strong>
           </article>
           <article className="card compactCard">
-            <h3>Event</h3>
+            <h3>事件卡</h3>
             <p>{result.draw.event.name}</p>
             <strong>{result.draw.event.value}</strong>
           </article>
           <article className="card compactCard" style={{ gridColumn: "span 12" }}>
-            <h3>Energy Output</h3>
-            <p>Raw energy: {result.rawEnergyScore}</p>
-            <strong>Mapped Energy: {result.mappedEnergyScore}</strong>
+            <h3>能量结果</h3>
+            <p>原始能量：{result.rawEnergyScore}</p>
+            <strong>映射能量：{result.mappedEnergyScore}</strong>
           </article>
         </div>
       ) : null}
