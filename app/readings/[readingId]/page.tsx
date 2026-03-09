@@ -14,6 +14,7 @@ import {
   toThemeKey,
   trendLabelMap
 } from "@/lib/ai-reading-prompt";
+import { getCardMeaningZh, getCardNameZh } from "@/lib/card-localization";
 
 type ReadingPageProps = {
   params: Promise<{ readingId: string }>;
@@ -138,39 +139,27 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
   const drawCards = [
     {
       label: "命格原型",
-      name: draw.archetype?.name,
+      name: getCardNameZh(reading.cardDraw?.archetypeCard.cardKey ?? draw.archetype?.name ?? "", draw.archetype?.name),
       value: draw.archetype?.value,
-      meaning:
-        draw.archetype?.polarity === "negative"
-          ? reading.cardDraw?.archetypeCard.shadowMeaning
-          : reading.cardDraw?.archetypeCard.positiveMeaning
+      meaning: getCardMeaningZh(reading.cardDraw?.archetypeCard.cardKey ?? "", draw.archetype?.polarity, draw.archetype?.polarity === "negative" ? reading.cardDraw?.archetypeCard.shadowMeaning : reading.cardDraw?.archetypeCard.positiveMeaning)
     },
     {
       label: "当前能量",
-      name: draw.energy1?.name,
+      name: getCardNameZh(reading.cardDraw?.energyCard1.cardKey ?? draw.energy1?.name ?? "", draw.energy1?.name),
       value: draw.energy1?.value,
-      meaning:
-        draw.energy1?.polarity === "negative"
-          ? reading.cardDraw?.energyCard1.shadowMeaning
-          : reading.cardDraw?.energyCard1.positiveMeaning
+      meaning: getCardMeaningZh(reading.cardDraw?.energyCard1.cardKey ?? "", draw.energy1?.polarity, draw.energy1?.polarity === "negative" ? reading.cardDraw?.energyCard1.shadowMeaning : reading.cardDraw?.energyCard1.positiveMeaning)
     },
     {
       label: "隐藏阻力",
-      name: draw.energy2?.name,
+      name: getCardNameZh(reading.cardDraw?.energyCard2.cardKey ?? draw.energy2?.name ?? "", draw.energy2?.name),
       value: draw.energy2?.value,
-      meaning:
-        draw.energy2?.polarity === "negative"
-          ? reading.cardDraw?.energyCard2.shadowMeaning
-          : reading.cardDraw?.energyCard2.positiveMeaning
+      meaning: getCardMeaningZh(reading.cardDraw?.energyCard2.cardKey ?? "", draw.energy2?.polarity, draw.energy2?.polarity === "negative" ? reading.cardDraw?.energyCard2.shadowMeaning : reading.cardDraw?.energyCard2.positiveMeaning)
     },
     {
       label: "现实事件",
-      name: draw.event?.name,
+      name: getCardNameZh(reading.cardDraw?.eventCard.cardKey ?? draw.event?.name ?? "", draw.event?.name),
       value: draw.event?.value,
-      meaning:
-        draw.event?.polarity === "negative"
-          ? reading.cardDraw?.eventCard.shadowMeaning
-          : reading.cardDraw?.eventCard.positiveMeaning
+      meaning: getCardMeaningZh(reading.cardDraw?.eventCard.cardKey ?? "", draw.event?.polarity, draw.event?.polarity === "negative" ? reading.cardDraw?.eventCard.shadowMeaning : reading.cardDraw?.eventCard.positiveMeaning)
     }
   ];
 

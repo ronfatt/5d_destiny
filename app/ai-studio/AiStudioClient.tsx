@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { destinyCardSeeds } from "@/lib/destiny-cards";
+import { getCardNameZh } from "@/lib/card-localization";
 
 type CardResponse = {
   cardKey: string;
@@ -84,7 +85,7 @@ export function AiStudioClient() {
             <select value={cardKey} onChange={(event) => setCardKey(event.target.value)}>
               {destinyCardSeeds.map((card) => (
                 <option key={card.cardKey} value={card.cardKey}>
-                  {card.name}
+                  {getCardNameZh(card.cardKey, card.name)}
                 </option>
               ))}
             </select>
@@ -102,7 +103,7 @@ export function AiStudioClient() {
             <div className="cardSection">
               <div className="sectionHeader">
                 <h3>{cardResult.name}</h3>
-                <p>{cardResult.cardKey}</p>
+                <p>{getCardNameZh(cardResult.cardKey, cardResult.cardKey)}</p>
               </div>
               <p><strong>Prompt</strong></p>
               <pre className="codeBlock">{cardResult.prompt}</pre>

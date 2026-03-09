@@ -2,6 +2,7 @@ import { CardCategory, CardValueMode, ReadingStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { clamp, destinyCardSeeds, resolveCardValue, round } from "@/lib/destiny-cards";
+import { getCardNameZh } from "@/lib/card-localization";
 
 function pickOne<T>(items: T[]) {
   return items[Math.floor(Math.random() * items.length)];
@@ -90,10 +91,10 @@ export async function POST(request: NextRequest) {
       const mappedEnergyScore = clamp(round(rawEnergyScore * 3, 1), -20, 20);
 
       const drawJson = {
-        archetype: { key: archetype.cardKey, name: archetype.name, value: resolvedArchetype.value, polarity: resolvedArchetype.polarity },
-        energy1: { key: energyOne.cardKey, name: energyOne.name, value: resolvedEnergyOne.value, polarity: resolvedEnergyOne.polarity },
-        energy2: { key: energyTwo.cardKey, name: energyTwo.name, value: resolvedEnergyTwo.value, polarity: resolvedEnergyTwo.polarity },
-        event: { key: eventCard.cardKey, name: eventCard.name, value: resolvedEvent.value, polarity: resolvedEvent.polarity },
+        archetype: { key: archetype.cardKey, name: getCardNameZh(archetype.cardKey, archetype.name), value: resolvedArchetype.value, polarity: resolvedArchetype.polarity },
+        energy1: { key: energyOne.cardKey, name: getCardNameZh(energyOne.cardKey, energyOne.name), value: resolvedEnergyOne.value, polarity: resolvedEnergyOne.polarity },
+        energy2: { key: energyTwo.cardKey, name: getCardNameZh(energyTwo.cardKey, energyTwo.name), value: resolvedEnergyTwo.value, polarity: resolvedEnergyTwo.polarity },
+        event: { key: eventCard.cardKey, name: getCardNameZh(eventCard.cardKey, eventCard.name), value: resolvedEvent.value, polarity: resolvedEvent.polarity },
         formula: {
           archetypeWeight: 0.3,
           energy1Weight: 0.25,

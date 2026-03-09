@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCardNameZh } from "@/lib/card-localization";
 
 type DrawResponse = {
   readingId: string;
@@ -84,22 +85,22 @@ export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: str
         <div className="drawResultGrid">
           <article className="card compactCard">
             <h3>原型卡</h3>
-            <p>{result.draw.archetype.name}</p>
+            <p>{getCardNameZh(result.draw.archetype.name, result.draw.archetype.name)}</p>
             <strong>{result.draw.archetype.value}</strong>
           </article>
           <article className="card compactCard">
             <h3>能量卡一</h3>
-            <p>{result.draw.energy1.name}</p>
+            <p>{getCardNameZh(result.draw.energy1.name, result.draw.energy1.name)}</p>
             <strong>{result.draw.energy1.value}</strong>
           </article>
           <article className="card compactCard">
             <h3>能量卡二</h3>
-            <p>{result.draw.energy2.name}</p>
+            <p>{getCardNameZh(result.draw.energy2.name, result.draw.energy2.name)}</p>
             <strong>{result.draw.energy2.value}</strong>
           </article>
           <article className="card compactCard">
             <h3>事件卡</h3>
-            <p>{result.draw.event.name}</p>
+            <p>{getCardNameZh(result.draw.event.name, result.draw.event.name)}</p>
             <strong>{result.draw.event.value}</strong>
           </article>
           <article className="card compactCard" style={{ gridColumn: "span 12" }}>

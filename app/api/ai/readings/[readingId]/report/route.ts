@@ -14,6 +14,7 @@ import {
   toThemeKey,
   trendLabelMap
 } from "@/lib/ai-reading-prompt";
+import { getCardMeaningZh, getCardNameZh } from "@/lib/card-localization";
 
 type ZiweiChartJson = {
   engineVersion?: string;
@@ -183,40 +184,28 @@ export async function POST(
       },
       cards: {
         archetype: {
-          name: draw.archetype?.name,
+          name: getCardNameZh(reading.cardDraw.archetypeCard.cardKey, draw.archetype?.name),
           value: draw.archetype?.value,
           polarity: draw.archetype?.polarity,
-          meaning:
-            draw.archetype?.polarity === "negative"
-              ? reading.cardDraw.archetypeCard.shadowMeaning ?? undefined
-              : reading.cardDraw.archetypeCard.positiveMeaning ?? undefined
+          meaning: getCardMeaningZh(reading.cardDraw.archetypeCard.cardKey, draw.archetype?.polarity, draw.archetype?.polarity === "negative" ? reading.cardDraw.archetypeCard.shadowMeaning : reading.cardDraw.archetypeCard.positiveMeaning)
         },
         energy1: {
-          name: draw.energy1?.name,
+          name: getCardNameZh(reading.cardDraw.energyCard1.cardKey, draw.energy1?.name),
           value: draw.energy1?.value,
           polarity: draw.energy1?.polarity,
-          meaning:
-            draw.energy1?.polarity === "negative"
-              ? reading.cardDraw.energyCard1.shadowMeaning ?? undefined
-              : reading.cardDraw.energyCard1.positiveMeaning ?? undefined
+          meaning: getCardMeaningZh(reading.cardDraw.energyCard1.cardKey, draw.energy1?.polarity, draw.energy1?.polarity === "negative" ? reading.cardDraw.energyCard1.shadowMeaning : reading.cardDraw.energyCard1.positiveMeaning)
         },
         energy2: {
-          name: draw.energy2?.name,
+          name: getCardNameZh(reading.cardDraw.energyCard2.cardKey, draw.energy2?.name),
           value: draw.energy2?.value,
           polarity: draw.energy2?.polarity,
-          meaning:
-            draw.energy2?.polarity === "negative"
-              ? reading.cardDraw.energyCard2.shadowMeaning ?? undefined
-              : reading.cardDraw.energyCard2.positiveMeaning ?? undefined
+          meaning: getCardMeaningZh(reading.cardDraw.energyCard2.cardKey, draw.energy2?.polarity, draw.energy2?.polarity === "negative" ? reading.cardDraw.energyCard2.shadowMeaning : reading.cardDraw.energyCard2.positiveMeaning)
         },
         event: {
-          name: draw.event?.name,
+          name: getCardNameZh(reading.cardDraw.eventCard.cardKey, draw.event?.name),
           value: draw.event?.value,
           polarity: draw.event?.polarity,
-          meaning:
-            draw.event?.polarity === "negative"
-              ? reading.cardDraw.eventCard.shadowMeaning ?? undefined
-              : reading.cardDraw.eventCard.positiveMeaning ?? undefined
+          meaning: getCardMeaningZh(reading.cardDraw.eventCard.cardKey, draw.event?.polarity, draw.event?.polarity === "negative" ? reading.cardDraw.eventCard.shadowMeaning : reading.cardDraw.eventCard.positiveMeaning)
         },
         mappedEnergyScore: reading.cardDraw.mappedEnergyScore
       }
