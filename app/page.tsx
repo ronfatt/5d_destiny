@@ -32,7 +32,7 @@ export default async function HomePage() {
           and platform architecture.
         </p>
         <div className="ctaRow">
-          <a className="button primary" href="/birth-profile">
+          <a className="button primary" href="/start">
             Start Birth Intake
           </a>
           <a className="button" href="/history">
@@ -58,7 +58,7 @@ export default async function HomePage() {
           <h2>MVP Flows</h2>
           <p>The app now supports guest mode and account mode. Logged-in users keep their readings under one account.</p>
           <div className="ctaRow">
-            <a className="button primary" href="/birth-profile">Birth Profile</a>
+            <a className="button primary" href="/start">Start Reading</a>
             <a className="button" href="/questionnaire">Questionnaire</a>
             <a className="button" href="/card-draw">Card Draw</a>
             <a className="button" href="/ai-studio">AI Studio</a>

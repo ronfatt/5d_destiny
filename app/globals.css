@@ -411,3 +411,48 @@ main {
   color: #ffd2d2;
   padding: 12px 14px;
 }
+
+.wizardShell {
+  display: grid;
+  gap: 18px;
+}
+
+.wizardProgress {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.wizardProgressBar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  transition: width 240ms ease;
+}
+
+.wizardSteps {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.wizardSteps span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.wizardSteps span.active {
+  color: var(--text);
+  border-color: rgba(227, 194, 122, 0.42);
+  background: rgba(227, 194, 122, 0.12);
+}
+
+.inlineNotice {
+  padding: 12px 14px;
+}
