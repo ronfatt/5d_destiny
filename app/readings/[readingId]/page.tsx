@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ReportRunner } from "./ReportRunner";
 import { ScoreRunner } from "./ScoreRunner";
+import { ReadingMetaEditor } from "./ReadingMetaEditor";
 
 type ReadingPageProps = {
   params: Promise<{ readingId: string }>;
@@ -75,7 +76,7 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
           This page combines the birth profile, questionnaire, card draw, scoring output, the latest saved AI
           report, and a persisted Ziwei chart summary. Structure and timing now come from the preset_A Ziwei engine.
         </p>
-        {reading.note ? <div className="feedback"><strong>Note</strong><p>{reading.note}</p></div> : null}
+        <ReadingMetaEditor readingId={reading.id} initialTitle={reading.title ?? ""} initialNote={reading.note ?? ""} />
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
         {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} hasReport={Boolean(latestReport)} /> : null}
       </section>
