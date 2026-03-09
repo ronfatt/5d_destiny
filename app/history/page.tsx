@@ -10,6 +10,33 @@ function formatDate(value: Date | null | undefined) {
   }).format(value);
 }
 
+function getResumeAction(reading: {
+  id: string;
+  birthProfileId: string | null;
+  cardDraw: unknown | null;
+  fiveDimensionScore: unknown | null;
+  reports: Array<{ id: string }>;
+}) {
+  if (!reading.cardDraw) {
+    return {
+      href: `/card-draw?readingId=${reading.id}`,
+      label: "Continue Draw"
+    };
+  }
+
+  if (!reading.fiveDimensionScore || reading.reports.length === 0) {
+    return {
+      href: `/readings/${reading.id}`,
+      label: "Finish Result"
+    };
+  }
+
+  return {
+    href: `/readings/${reading.id}`,
+    label: "Open Result"
+  };
+}
+
 export default async function HistoryPage() {
   const user = await getCurrentUser();
 
@@ -29,6 +56,8 @@ export default async function HistoryPage() {
       take: 20,
       include: {
         birthProfile: true,
+        cardDraw: true,
+        questionnaireResult: true,
         fiveDimensionScore: true,
         reports: { orderBy: { createdAt: "desc" }, take: 1 }
       }
@@ -40,10 +69,10 @@ export default async function HistoryPage() {
       <section className="hero heroCompact">
         <div className="eyebrow">History</div>
         <h1>{user.displayName ?? user.email}</h1>
-        <p>Review your saved birth profiles, completed readings, and the latest report status from one place.</p>
+        <p>Review your saved birth profiles, completed readings, and resume anything that stopped mid-flow.</p>
         <div className="ctaRow">
-          <a className="button primary" href="/birth-profile">New Birth Profile</a>
-          <a className="button" href="/questionnaire">Start Questionnaire</a>
+          <a className="button primary" href="/start">Start Reading</a>
+          <a className="button" href="/birth-profile">Birth Profiles</a>
           <a className="button" href="/auth">Account</a>
         </div>
       </section>
@@ -71,6 +100,7 @@ export default async function HistoryPage() {
                   <th>Status</th>
                   <th>Score</th>
                   <th>Report</th>
+                  <th>Action</th>
                   <th>Created</th>
                 </tr>
               </thead>
@@ -85,6 +115,7 @@ export default async function HistoryPage() {
                       : reading.theme === "LOVE"
                         ? score?.loveScore
                         : score?.healthScore;
+                  const resume = getResumeAction(reading);
 
                   return (
                     <tr key={reading.id}>
@@ -93,12 +124,15 @@ export default async function HistoryPage() {
                       <td>{reading.status}</td>
                       <td>{themeScore ?? "-"}</td>
                       <td>{report ? report.reportVersion : "-"}</td>
+                      <td>
+                        <a className="tableActionLink" href={resume.href}>{resume.label}</a>
+                      </td>
                       <td>{formatDate(reading.createdAt)}</td>
                     </tr>
                   );
                 }) : (
                   <tr>
-                    <td colSpan={6}>No readings saved under this account yet.</td>
+                    <td colSpan={7}>No readings saved under this account yet.</td>
                   </tr>
                 )}
               </tbody>
