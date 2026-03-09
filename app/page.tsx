@@ -1,3 +1,5 @@
+import { getCurrentUser } from "@/lib/auth";
+
 const docs = [
   {
     title: "Core Model",
@@ -16,7 +18,9 @@ const docs = [
   }
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const user = await getCurrentUser();
+
   return (
     <main>
       <section className="hero">
@@ -28,11 +32,14 @@ export default function HomePage() {
           and platform architecture.
         </p>
         <div className="ctaRow">
-          <a className="button primary" href="/api/health">
+          <a className="button primary" href="/birth-profile">
             Start Birth Intake
           </a>
-          <a className="button" href="https://github.com/ronfatt/5d_destiny">
-            Open Repository
+          <a className="button" href="/history">
+            {user ? "Open History" : "Account History"}
+          </a>
+          <a className="button" href="/auth">
+            {user ? `Signed in: ${user.displayName ?? user.email}` : "Login / Register"}
           </a>
         </div>
       </section>
@@ -49,12 +56,13 @@ export default function HomePage() {
         ))}
         <article className="card" style={{ gridColumn: "span 12" }}>
           <h2>MVP Flows</h2>
-          <p>Two working intake steps are now live in the app shell.</p>
+          <p>The app now supports guest mode and account mode. Logged-in users keep their readings under one account.</p>
           <div className="ctaRow">
             <a className="button primary" href="/birth-profile">Birth Profile</a>
             <a className="button" href="/questionnaire">Questionnaire</a>
             <a className="button" href="/card-draw">Card Draw</a>
             <a className="button" href="/ai-studio">AI Studio</a>
+            <a className="button" href="/history">History</a>
             <a className="button" href="/admin">Admin</a>
           </div>
         </article>
@@ -63,13 +71,13 @@ export default function HomePage() {
           <h2>Next build targets</h2>
           <ul>
             <li>Capture birth profiles and persist them to Supabase.</li>
-            <li>Implement birth profile, card draw, questionnaire, and reading endpoints.</li>
-            <li>Build report pages from the existing AI report template spec.</li>
+            <li>Run the reading chain under authenticated users and preserve history.</li>
+            <li>Build deeper report management and member-grade account features.</li>
           </ul>
         </article>
       </section>
 
-      <div className="footerNote">Current app shell only. Product logic and UI flows still need implementation.</div>
+      <div className="footerNote">Current app shell plus authenticated history. Full member operations still need implementation.</div>
     </main>
   );
 }

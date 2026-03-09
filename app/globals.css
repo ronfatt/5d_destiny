@@ -374,3 +374,40 @@ main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.authShell {
+  display: grid;
+  gap: 16px;
+}
+
+.authTabs {
+  margin-top: 0;
+}
+
+.intakeForm label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.intakeForm input,
+.intakeForm textarea,
+.intakeForm select {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(6, 17, 33, 0.8);
+  color: var(--text);
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.inlineError {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 124, 124, 0.5);
+  background: rgba(122, 26, 39, 0.24);
+  color: #ffd2d2;
+  padding: 12px 14px;
+}

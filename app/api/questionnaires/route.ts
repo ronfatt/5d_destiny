@@ -1,6 +1,7 @@
 import { ReadingTheme, ReadingType, UserStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUserId } from "@/lib/auth";
 
 const allowedThemes = new Set<ReadingTheme>(["CAREER", "WEALTH", "LOVE", "HEALTH"]);
 
@@ -72,6 +73,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Birth profile not found." }, { status: 404 });
     }
 
+    const currentUserId = await getCurrentUserId();
+    if (currentUserId && birthProfile.userId !== currentUserId) {
+      return NextResponse.json({ error: "Birth profile does not belong to the current account." }, { status: 403 });
+    }
+
     const mindAverage = round(mindAnswers.reduce((sum, value) => sum + value, 0) / mindAnswers.length, 2);
     const mind = getMindLevel(mindAverage);
     const actionTotal = actionAnswers.reduce((sum, value) => sum + value, 0);
@@ -116,7 +122,7 @@ export async function POST(request: NextRequest) {
           mindValue: mind.factor,
           actionValue: action.raw,
           inputJson: {
-            source: "questionnaire_mvp",
+            source: currentUserId ? "questionnaire_authenticated" : "questionnaire_guest",
             mindAverage,
             mindLevel: mind.level,
             mindLabel: mind.label,

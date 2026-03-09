@@ -1,6 +1,8 @@
+import crypto from "node:crypto";
 import { Gender, UserStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUserId } from "@/lib/auth";
 
 const allowedGenders = new Set<Gender>(["MALE", "FEMALE", "OTHER", "UNSPECIFIED"]);
 
@@ -40,26 +42,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Timezone is required." }, { status: 400 });
     }
 
+    const currentUserId = await getCurrentUserId();
+
     const created = await prisma.$transaction(async (tx) => {
-      const guestSeed = crypto.randomUUID();
-      const user = await tx.user.create({
-        data: {
-          email: `guest+${guestSeed}@5ddestiny.local`,
-          passwordHash: `guest:${guestSeed}`,
-          displayName: "Guest User",
-          status: UserStatus.ACTIVE
-        }
-      });
+      let userId = currentUserId;
+      let source = "web_mvp_user";
+
+      if (!userId) {
+        const guestSeed = crypto.randomUUID();
+        const guestUser = await tx.user.create({
+          data: {
+            email: `guest+${guestSeed}@5ddestiny.local`,
+            passwordHash: `guest:${guestSeed}`,
+            displayName: "Guest User",
+            status: UserStatus.ACTIVE
+          }
+        });
+        userId = guestUser.id;
+        source = "web_mvp_guest";
+      }
 
       return tx.birthProfile.create({
         data: {
-          userId: user.id,
+          userId,
           birthDate: new Date(`${birthDate}T00:00:00.000Z`),
           birthTime,
           birthLocation,
           timezone,
           gender,
-          source: "web_mvp_guest"
+          source
         },
         select: {
           id: true,
@@ -68,11 +79,13 @@ export async function POST(request: NextRequest) {
           birthLocation: true,
           timezone: true,
           gender: true,
+          source: true,
           createdAt: true,
           user: {
             select: {
               id: true,
-              email: true
+              email: true,
+              displayName: true
             }
           }
         }
