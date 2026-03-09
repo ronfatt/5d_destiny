@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { Gender, UserStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUserId } from "@/lib/auth";
+import { getCurrentUserId, rememberGuestIdentity } from "@/lib/auth";
 
 const allowedGenders = new Set<Gender>(["MALE", "FEMALE", "OTHER", "UNSPECIFIED"]);
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         source = "web_mvp_guest";
       }
 
-      return tx.birthProfile.create({
+      const birthProfile = await tx.birthProfile.create({
         data: {
           userId,
           birthDate: new Date(`${birthDate}T00:00:00.000Z`),
@@ -90,7 +90,13 @@ export async function POST(request: NextRequest) {
           }
         }
       });
+
+      return birthProfile;
     });
+
+    if (!currentUserId) {
+      await rememberGuestIdentity(created.user.id);
+    }
 
     return NextResponse.json({ data: created }, { status: 201 });
   } catch (error) {

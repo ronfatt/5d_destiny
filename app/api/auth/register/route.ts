@@ -1,7 +1,7 @@
 import { UserStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession, hashPassword } from "@/lib/auth";
+import { claimGuestData, createSession, hashPassword } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       select: { id: true, email: true, displayName: true }
     });
 
+    await claimGuestData(user.id);
     await createSession(user.id);
 
     return NextResponse.json({ data: user }, { status: 201 });

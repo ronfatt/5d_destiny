@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession, verifyPassword } from "@/lib/auth";
+import { claimGuestData, createSession, verifyPassword } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
     }
 
+    await claimGuestData(user.id);
     await createSession(user.id);
 
     return NextResponse.json({
