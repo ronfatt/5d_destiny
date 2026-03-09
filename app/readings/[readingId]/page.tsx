@@ -76,7 +76,7 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
           report, and a persisted Ziwei chart summary. Structure and timing now come from the preset_A Ziwei engine.
         </p>
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
-        {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} /> : null}
+        {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} hasReport={Boolean(latestReport)} /> : null}
       </section>
 
       <section className="grid">
@@ -181,7 +181,7 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
               <pre className="codeBlock reportBlock">{latestReport.reportText}</pre>
             </>
           ) : (
-            <p>No AI report has been saved yet. Generate one after scoring.</p>
+            <p>No AI report has been saved yet. The page will generate one automatically after scoring.</p>
           )}
         </article>
       </section>
