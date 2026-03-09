@@ -28,10 +28,22 @@ function getActionScore(total: number) {
   return { raw: 90, label: "high_execution" };
 }
 
+function buildReadingTitle(theme: ReadingTheme, question: string, customTitle?: string) {
+  if (customTitle?.trim()) {
+    return customTitle.trim();
+  }
+
+  const themeLabel = theme.charAt(0) + theme.slice(1).toLowerCase();
+  const compactQuestion = question.length > 56 ? `${question.slice(0, 56)}...` : question;
+  return `${themeLabel}: ${compactQuestion}`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as {
       birthProfileId?: string;
+      title?: string;
+      note?: string;
       question?: string;
       theme?: ReadingTheme;
       mindAnswers?: number[];
@@ -39,6 +51,8 @@ export async function POST(request: NextRequest) {
     };
 
     const birthProfileId = body.birthProfileId?.trim();
+    const title = body.title?.trim();
+    const note = body.note?.trim() || null;
     const question = body.question?.trim();
     const theme = body.theme && allowedThemes.has(body.theme) ? body.theme : null;
     const mindAnswers = Array.isArray(body.mindAnswers) ? body.mindAnswers.map(Number) : [];
@@ -82,6 +96,7 @@ export async function POST(request: NextRequest) {
     const mind = getMindLevel(mindAverage);
     const actionTotal = actionAnswers.reduce((sum, value) => sum + value, 0);
     const action = getActionScore(actionTotal);
+    const resolvedTitle = buildReadingTitle(theme, question, title);
 
     const created = await prisma.$transaction(async (tx) => {
       await tx.user.update({
@@ -93,6 +108,8 @@ export async function POST(request: NextRequest) {
         data: {
           userId: birthProfile.userId,
           birthProfileId: birthProfile.id,
+          title: resolvedTitle,
+          note,
           question,
           theme,
           readingType: ReadingType.STANDARD
@@ -127,7 +144,9 @@ export async function POST(request: NextRequest) {
             mindLevel: mind.level,
             mindLabel: mind.label,
             actionTotal,
-            actionLabel: action.label
+            actionLabel: action.label,
+            readingTitle: resolvedTitle,
+            readingNote: note
           }
         }
       });
@@ -139,6 +158,8 @@ export async function POST(request: NextRequest) {
       {
         data: {
           readingId: created.id,
+          title: created.title,
+          note: created.note,
           theme: created.theme,
           question: created.question,
           mindAverage,

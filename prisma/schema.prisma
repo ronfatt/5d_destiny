@@ -191,6 +191,8 @@ model DestinyReading {
   id                  String               @id @default(cuid())
   userId              String               @map("user_id")
   birthProfileId      String?              @map("birth_profile_id")
+  title               String?
+  note                String?
   question            String
   theme               ReadingTheme
   readingType         ReadingType          @map("reading_type")

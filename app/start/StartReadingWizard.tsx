@@ -41,6 +41,8 @@ export function StartReadingWizard() {
   const [readingId, setReadingId] = useState("");
 
   const [birth, setBirth] = useState(initialBirth);
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
   const [question, setQuestion] = useState("What is the current trend for my career?");
   const [theme, setTheme] = useState("CAREER");
   const [mindAnswers, setMindAnswers] = useState<number[]>(mindQuestions.map(() => 4));
@@ -85,6 +87,8 @@ export function StartReadingWizard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           birthProfileId,
+          title,
+          note,
           question,
           theme,
           mindAnswers,
@@ -136,7 +140,7 @@ export function StartReadingWizard() {
       </div>
       <div className="wizardSteps">
         <span className={step >= 1 ? "active" : ""}>1. Birth</span>
-        <span className={step >= 2 ? "active" : ""}>2. Mind + Action</span>
+        <span className={step >= 2 ? "active" : ""}>2. Reading Setup</span>
         <span className={step >= 3 ? "active" : ""}>3. Draw + Result</span>
       </div>
 
@@ -184,6 +188,10 @@ export function StartReadingWizard() {
 
           <div className="fieldGrid">
             <label>
+              <span>Reading title</span>
+              <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Career Pivot - Q2 2026" />
+            </label>
+            <label>
               <span>Theme</span>
               <select value={theme} onChange={(event) => setTheme(event.target.value)}>
                 <option value="CAREER">Career</option>
@@ -192,11 +200,17 @@ export function StartReadingWizard() {
                 <option value="HEALTH">Health</option>
               </select>
             </label>
-            <label>
-              <span>Current question</span>
-              <input type="text" value={question} onChange={(event) => setQuestion(event.target.value)} required />
-            </label>
           </div>
+
+          <label>
+            <span>Reading note</span>
+            <textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Context, deadline, people involved, or why this reading matters." rows={4} />
+          </label>
+
+          <label>
+            <span>Current question</span>
+            <input type="text" value={question} onChange={(event) => setQuestion(event.target.value)} required />
+          </label>
 
           <div className="cardSection">
             <div className="sectionHeader">
@@ -262,7 +276,8 @@ export function StartReadingWizard() {
         <div className="intakeForm">
           <div className="feedback success">
             <strong>Reading ready</strong>
-            <p>{readingId}</p>
+            <p>{title || question}</p>
+            <code>{readingId}</code>
           </div>
           <p>
             The last step writes the 4-card draw. After that, the result page will auto-run score and AI report.

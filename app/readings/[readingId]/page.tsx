@@ -43,7 +43,6 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
     | undefined;
 
   const ziweiSummary = inputJson?.ziweiChartSummary;
-
   const breakdown = reading.fiveDimensionScore?.breakdownJson as
     | {
         focusTheme?: string;
@@ -65,16 +64,18 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
     | undefined;
 
   const themes = breakdown?.themes ? Object.entries(breakdown.themes) : [];
+  const title = reading.title?.trim() || reading.question;
 
   return (
     <main>
       <section className="hero heroCompact">
         <div className="eyebrow">Reading Result</div>
-        <h1>Reading {reading.id}</h1>
+        <h1>{title}</h1>
         <p>
           This page combines the birth profile, questionnaire, card draw, scoring output, the latest saved AI
           report, and a persisted Ziwei chart summary. Structure and timing now come from the preset_A Ziwei engine.
         </p>
+        {reading.note ? <div className="feedback"><strong>Note</strong><p>{reading.note}</p></div> : null}
         <ScoreRunner readingId={reading.id} hasScore={Boolean(reading.fiveDimensionScore)} />
         {reading.fiveDimensionScore ? <ReportRunner readingId={reading.id} hasReport={Boolean(latestReport)} /> : null}
       </section>
@@ -83,6 +84,7 @@ export default async function ReadingResultPage({ params }: ReadingPageProps) {
         <article className="card" style={{ gridColumn: "span 4" }}>
           <h2>Input Snapshot</h2>
           <ul>
+            <li>Reading ID: {reading.id}</li>
             <li>Theme: {reading.theme}</li>
             <li>Status: {reading.status}</li>
             <li>Question: {reading.question}</li>

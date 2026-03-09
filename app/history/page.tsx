@@ -12,7 +12,6 @@ function formatDate(value: Date | null | undefined) {
 
 function getResumeAction(reading: {
   id: string;
-  birthProfileId: string | null;
   cardDraw: unknown | null;
   fiveDimensionScore: unknown | null;
   reports: Array<{ id: string }>;
@@ -116,10 +115,16 @@ export default async function HistoryPage() {
                         ? score?.loveScore
                         : score?.healthScore;
                   const resume = getResumeAction(reading);
+                  const title = reading.title?.trim() || reading.question;
 
                   return (
                     <tr key={reading.id}>
-                      <td><a href={`/readings/${reading.id}`}>{reading.id.slice(0, 12)}</a></td>
+                      <td>
+                        <div className="readingTitleCell">
+                          <a href={`/readings/${reading.id}`}>{title}</a>
+                          <span>{reading.id.slice(0, 12)}</span>
+                        </div>
+                      </td>
                       <td>{reading.theme}</td>
                       <td>{reading.status}</td>
                       <td>{themeScore ?? "-"}</td>
