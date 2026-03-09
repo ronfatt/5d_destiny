@@ -7,8 +7,8 @@ export default function BirthProfilePage() {
         <div className="eyebrow">User Input System</div>
         <h1>Capture birth profile data before chart generation.</h1>
         <p>
-          This is the first product intake screen. It writes a birth profile into the database and creates a
-          temporary guest user record so the reading pipeline can proceed without a full auth system.
+          This is the first screen in the runnable intake chain. Save the birth profile once, then the app carries the
+          generated id forward automatically into the questionnaire step.
         </p>
       </section>
 
@@ -20,11 +20,11 @@ export default function BirthProfilePage() {
         </article>
 
         <article className="card" style={{ gridColumn: "span 5" }}>
-          <h2>MVP Notes</h2>
+          <h2>Flow Output</h2>
           <ul>
-            <li>Current flow stores anonymous guest submissions.</li>
-            <li>Each submission creates a temporary user and one birth profile record.</li>
-            <li>Next step should attach this profile to questionnaire and reading creation.</li>
+            <li>Saves one birth profile to the current account or a guest user.</li>
+            <li>Generates a persistent `birthProfileId`.</li>
+            <li>Redirects directly into questionnaire with the id attached.</li>
           </ul>
         </article>
       </section>

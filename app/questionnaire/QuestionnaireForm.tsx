@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const mindQuestions = [
   "When pressure rises, I can stay clear instead of reacting impulsively.",
@@ -32,8 +33,9 @@ type SubmitState = {
 const initialMindAnswers = mindQuestions.map(() => 4);
 const initialActionAnswers = actionQuestions.map(() => 1);
 
-export function QuestionnaireForm() {
-  const [birthProfileId, setBirthProfileId] = useState("");
+export function QuestionnaireForm({ initialBirthProfileId = "" }: { initialBirthProfileId?: string }) {
+  const router = useRouter();
+  const [birthProfileId, setBirthProfileId] = useState(initialBirthProfileId);
   const [question, setQuestion] = useState("What is the current trend for my career?");
   const [theme, setTheme] = useState("CAREER");
   const [mindAnswers, setMindAnswers] = useState<number[]>(initialMindAnswers);
@@ -78,9 +80,11 @@ export function QuestionnaireForm() {
 
       setSubmitState({
         status: "success",
-        message: "Questionnaire saved and linked to a reading record.",
+        message: "Questionnaire saved. Redirecting to card draw.",
         readingId: payload.data.readingId
       });
+
+      router.push(`/card-draw?readingId=${payload.data.readingId}`);
     } catch (error) {
       setSubmitState({
         status: "error",
@@ -96,7 +100,7 @@ export function QuestionnaireForm() {
           <span>Birth profile ID</span>
           <input
             type="text"
-            placeholder="Paste the birth profile id from the previous step"
+            placeholder="Auto-filled from the previous step"
             value={birthProfileId}
             onChange={(event) => setBirthProfileId(event.target.value)}
             required
@@ -176,7 +180,7 @@ export function QuestionnaireForm() {
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={submitState.status === "submitting"}>
-          {submitState.status === "submitting" ? "Saving..." : "Save Questionnaire"}
+          {submitState.status === "submitting" ? "Saving..." : "Save And Continue"}
         </button>
         <a className="button" href="/birth-profile">
           Back to Birth Profile
@@ -187,12 +191,7 @@ export function QuestionnaireForm() {
         <div className={`feedback ${submitState.status}`}>
           <strong>{submitState.status === "success" ? "Saved" : "Status"}</strong>
           <p>{submitState.message}</p>
-          {submitState.readingId ? (<>
-          <code>{submitState.readingId}</code>
-          <div className="ctaRow">
-            <a className="button" href="/card-draw">Go To Card Draw</a>
-          </div>
-        </>) : null}
+          {submitState.readingId ? <code>{submitState.readingId}</code> : null}
         </div>
       ) : null}
     </form>

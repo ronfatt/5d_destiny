@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type SubmitState = {
   status: "idle" | "submitting" | "success" | "error";
@@ -18,6 +19,7 @@ const initialState = {
 };
 
 export function BirthProfileForm() {
+  const router = useRouter();
   const [form, setForm] = useState(initialState);
   const [submitState, setSubmitState] = useState<SubmitState>({ status: "idle" });
 
@@ -57,10 +59,11 @@ export function BirthProfileForm() {
 
       setSubmitState({
         status: "success",
-        message: "Birth profile saved. You can now connect this flow to chart generation.",
+        message: "Birth profile saved. Redirecting to questionnaire.",
         birthProfileId: payload.data.id
       });
-      setForm(initialState);
+
+      router.push(`/questionnaire?birthProfileId=${payload.data.id}`);
     } catch (error) {
       setSubmitState({
         status: "error",
@@ -130,10 +133,10 @@ export function BirthProfileForm() {
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={!canSubmit || submitState.status === "submitting"}>
-          {submitState.status === "submitting" ? "Saving..." : "Save Birth Profile"}
+          {submitState.status === "submitting" ? "Saving..." : "Save And Continue"}
         </button>
-        <a className="button" href="/api/health">
-          API Health
+        <a className="button" href="/history">
+          History
         </a>
       </div>
 

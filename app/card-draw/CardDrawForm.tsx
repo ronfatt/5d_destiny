@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type DrawResponse = {
   readingId: string;
@@ -14,8 +15,9 @@ type DrawResponse = {
   };
 };
 
-export function CardDrawForm() {
-  const [readingId, setReadingId] = useState("");
+export function CardDrawForm({ initialReadingId = "" }: { initialReadingId?: string }) {
+  const router = useRouter();
+  const [readingId, setReadingId] = useState(initialReadingId);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState<string>();
   const [result, setResult] = useState<DrawResponse | null>(null);
@@ -40,7 +42,8 @@ export function CardDrawForm() {
 
       setResult(payload.data);
       setStatus("success");
-      setMessage("Cards drawn and energy value saved to the reading.");
+      setMessage("Cards drawn. Redirecting to the result page.");
+      router.push(`/readings/${payload.data.readingId}`);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Unexpected error.");
@@ -53,7 +56,7 @@ export function CardDrawForm() {
         <span>Reading ID</span>
         <input
           type="text"
-          placeholder="Paste the reading id from the questionnaire step"
+          placeholder="Auto-filled from the questionnaire step"
           value={readingId}
           onChange={(event) => setReadingId(event.target.value)}
           required
@@ -62,7 +65,7 @@ export function CardDrawForm() {
 
       <div className="ctaRow">
         <button className="button primary" type="submit" disabled={status === "submitting"}>
-          {status === "submitting" ? "Drawing..." : "Draw 4 Destiny Cards"}
+          {status === "submitting" ? "Drawing..." : "Draw Cards And Continue"}
         </button>
         <a className="button" href="/questionnaire">
           Back to Questionnaire
@@ -73,11 +76,7 @@ export function CardDrawForm() {
         <div className={`feedback ${status === "success" ? "success" : "error"}`}>
           <strong>{status === "success" ? "Draw Complete" : "Status"}</strong>
           <p>{message}</p>
-          {result ? (
-            <div className="ctaRow">
-              <a className="button" href={`/readings/${result.readingId}`}>Open Result Page</a>
-            </div>
-          ) : null}
+          {result ? <code>{result.readingId}</code> : null}
         </div>
       ) : null}
 

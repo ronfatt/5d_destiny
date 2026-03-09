@@ -1,22 +1,28 @@
 import { CardDrawForm } from "./CardDrawForm";
 
-export default function CardDrawPage() {
+type CardDrawPageProps = {
+  searchParams: Promise<{ readingId?: string }>;
+};
+
+export default async function CardDrawPage({ searchParams }: CardDrawPageProps) {
+  const params = await searchParams;
+
   return (
     <main>
       <section className="hero heroCompact">
         <div className="eyebrow">Destiny Card System</div>
         <h1>Draw the energy layer and attach it to the current reading.</h1>
         <p>
-          This step seeds the 50-card system, draws one archetype card, two energy cards, and one event card,
-          then writes the mapped energy score back into the five-dimension input record.
+          The reading id now flows in automatically from questionnaire. Once the draw completes, the app sends you
+          directly to the result page where scoring and AI reporting can continue.
         </p>
       </section>
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 8" }}>
           <h2>Card Draw</h2>
-          <p>Use the reading id from the questionnaire step to bind the draw to the active reading.</p>
-          <CardDrawForm />
+          <p>One archetype, two energy cards, and one event card feed the `Energy` variable.</p>
+          <CardDrawForm initialReadingId={params.readingId ?? ""} />
         </article>
 
         <article className="card" style={{ gridColumn: "span 4" }}>

@@ -1,22 +1,28 @@
 import { QuestionnaireForm } from "./QuestionnaireForm";
 
-export default function QuestionnairePage() {
+type QuestionnairePageProps = {
+  searchParams: Promise<{ birthProfileId?: string }>;
+};
+
+export default async function QuestionnairePage({ searchParams }: QuestionnairePageProps) {
+  const params = await searchParams;
+
   return (
     <main>
       <section className="hero heroCompact">
         <div className="eyebrow">Mind And Action Intake</div>
         <h1>Capture the variables that make the model changeable.</h1>
         <p>
-          This step turns the questionnaire into database records linked to a reading. It captures the two
-          user-controlled variables in the five-dimension system: mind and action.
+          The previous step now auto-fills the birth profile id. After this form is saved, the app sends you straight
+          into card draw with the new reading id already attached.
         </p>
       </section>
 
       <section className="grid">
         <article className="card" style={{ gridColumn: "span 8" }}>
           <h2>Questionnaire Intake</h2>
-          <p>Use the birth profile id from the previous step to attach the answers to a reading record.</p>
-          <QuestionnaireForm />
+          <p>Mind and action values are written to the reading and prepared for scoring.</p>
+          <QuestionnaireForm initialBirthProfileId={params.birthProfileId ?? ""} />
         </article>
 
         <article className="card" style={{ gridColumn: "span 4" }}>
